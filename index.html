@@ -27,7 +27,6 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
         
-        /* ⬇️ [핵심 수정] 헤더 영역 스타일: 배경 이미지 적용 */
         .header-area {
             background-image: url('https://i.imgur.com/4iyJbxE.png'); 
             background-size: cover;
@@ -39,12 +38,10 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        /* ⬇️ [핵심 수정] 메인 제목 스타일: 색상 변경 및 외곽선 색상 조정 */
         .main-title {
-            color: #645d55; /* **요청하신 색상으로 변경** */
+            color: #645d55;
             font-size: 2.2em;
             margin-bottom: 0;
-            /* 흰색 외곽선은 유지하여 배경과의 대비 확보 */
             text-shadow: 
                 -1px -1px 0 #fff,  
                 1px -1px 0 #fff,
@@ -52,7 +49,6 @@
                 1px 1px 0 #fff;
         }
 
-        /* 부제목 스타일 (투명도 70% 글상자) */
         .sub-title {
             color: #333;
             font-size: 0.85em;
@@ -88,17 +84,32 @@
         
         .banner-section {
             margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
         }
+        
         .banner-item {
-            margin: 10px auto;
+            margin: 0 10px;
             display: block;
             cursor: pointer;
             transition: transform 0.2s;
+        }
+        .banner-item img {
             width: 32px;
+            height: 32px;
+            border: 1px solid #ccc;
+            display: block;
         }
         .banner-item:hover {
             transform: scale(1.1);
         }
+        .banner-section + p {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
         .banner-link-box {
             background-color: #eee;
             padding: 8px;
@@ -163,14 +174,18 @@
 
         <h2>배너 이미지</h2>
         <div class="banner-section">
-            <div class="banner-item" onclick="copyToClipboard('https://i.imgur.com/7QbcKCP.png')">
-                <img src="https://i.imgur.com/7QbcKCP.png" alt="32x32 배너" width="32" height="32" style="border: 1px solid #ccc;">
+            <div class="banner-item" onclick="copyToClipboard('https://i.imgur.com/852Nww5.png')">
+                <img src="https://i.imgur.com/852Nww5.png" alt="32x32 배너 1">
             </div>
             
-            <p style="font-size: 0.85em; color: #777; margin-top: 5px;">
-                이미지를 클릭하면 주소가 복사됩니다.
-            </p>
+            <div class="banner-item" onclick="copyToClipboard('https://i.imgur.com/9PvHBeM.png')">
+                <img src="https://i.imgur.com/9PvHBeM.png" alt="32x32 배너 2">
+            </div>
         </div>
+        
+        <p style="font-size: 0.85em; color: #777; margin-top: 5px;">
+            이미지를 클릭하면 주소가 복사됩니다.
+        </p>
 
         <h2>동맹 링크 주소</h2>
         <p style="font-size: 0.85em; color: #555;">
