@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>배너모아 - 배너 수집가를 위한 동맹</title>
+    <title>🌰배너모아🐿️ - 배너 수집가를 위한 동맹</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
@@ -27,17 +27,41 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
         
+        /* ⬇️ [핵심 수정] 헤더 영역 스타일: 배경 이미지 적용 */
+        .header-area {
+            background-image: url('https://i.imgur.com/4iyJbxE.png'); 
+            background-size: cover;
+            background-position: center;
+            padding: 20px 0;
+            margin: -25px -25px 30px -25px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ⬇️ [핵심 수정] 메인 제목 스타일: 색상 변경 및 외곽선 색상 조정 */
         .main-title {
-            color: #0056b3;
+            color: #645d55; /* **요청하신 색상으로 변경** */
             font-size: 2.2em;
             margin-bottom: 0;
+            /* 흰색 외곽선은 유지하여 배경과의 대비 확보 */
+            text-shadow: 
+                -1px -1px 0 #fff,  
+                1px -1px 0 #fff,
+                -1px 1px 0 #fff,
+                1px 1px 0 #fff;
         }
+
+        /* 부제목 스타일 (투명도 70% 글상자) */
         .sub-title {
-            color: #555;
-            font-size: 0.85em; 
+            color: #333;
+            font-size: 0.85em;
             font-weight: normal;
-            margin-top: 5px;
-            margin-bottom: 15px;
+            margin: 5px auto 0 auto;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.7); 
+            border-radius: 4px;
         }
 
         .intro-list {
@@ -91,11 +115,10 @@
             color: #777;
         }
         
-        /* ⬇️ [핵심 수정] 구분선 (hr) 스타일 조정 */
         hr {
             border: 0;
-            border-top: 1px solid #ddd; /* 더 연한 회색 */
-            width: 50%; /* 길이 짧게 조정 */
+            border-top: 1px solid #ddd;
+            width: 50%;
             margin: 20px auto;
         }
 
@@ -119,9 +142,11 @@
 
     <div class="container">
 
-        <h1 class="main-title">배너모아 ✨</h1>
-        <h2 class="sub-title">~ 배너 수집가를 위한 동맹 ~</h2>
-
+        <div class="header-area">
+            <h1 class="main-title">🌰배너모아🐿️</h1>
+            <h2 class="sub-title">배너 수집가를 위한 동맹</h2>
+        </div>
+        
         <ul class="intro-list">
             <li>어떤 형태의 배너든 마냥 좋다!</li>
             <li>새로운 동맹 배너를 발견하면 기쁘다!</li>
@@ -143,13 +168,13 @@
             </div>
             
             <p style="font-size: 0.85em; color: #777; margin-top: 5px;">
-                👆 이미지를 클릭하면 주소가 자동으로 복사됩니다.
+                이미지를 클릭하면 주소가 복사됩니다.
             </p>
         </div>
 
         <h2>동맹 링크 주소</h2>
         <p style="font-size: 0.85em; color: #555;">
-            아래 상자를 클릭하면 동맹의 메인 주소가 복사됩니다.
+            아래 상자를 클릭하면 동맹 주소가 복사됩니다.
         </p>
         <div class="banner-link-box" id="allianceLink" onclick="copyLinkToClipboard()">
             https://osunia.github.io/bannermoa/
@@ -191,8 +216,5 @@
             }, 1500);
         }
     </script>
-<script>NekoType="marmalade"</script>
-<h1 id=nl><script src="https://webneko.net/n20171213.js"></script><a 
-href="https://webneko.net">Neko</a></h1>
 </body>
 </html>
