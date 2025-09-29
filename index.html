@@ -32,7 +32,6 @@
             font-size: 2.2em;
             margin-bottom: 0;
         }
-        /* ⬇️ [핵심 수정] 부제 폰트 크기: 1.0em -> 0.85em */
         .sub-title {
             color: #555;
             font-size: 0.85em; 
@@ -41,7 +40,6 @@
             margin-bottom: 15px;
         }
 
-        /* 추가 설명 리스트 (폰트 크기 유지: 0.95em) */
         .intro-list {
             list-style: none;
             padding: 0;
@@ -55,7 +53,6 @@
             color: #444;
         }
         
-        /* ⬇️ [핵심 수정] 기존 설명 문구 폰트 크기: 1.0em -> 0.85em */
         p.description {
             font-size: 0.85em; 
             margin: 0 auto 25px auto; 
@@ -84,7 +81,7 @@
             border: 1px dashed #ccc;
             margin: 15px auto;
             max-width: 350px;
-            font-size: 0.85em; /* 동맹 링크 주소 박스 폰트 크기 (기준) */
+            font-size: 0.85em;
             word-break: break-all;
             cursor: copy;
         }
@@ -93,6 +90,15 @@
             font-size: 0.8em;
             color: #777;
         }
+        
+        /* ⬇️ [핵심 수정] 구분선 (hr) 스타일 조정 */
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd; /* 더 연한 회색 */
+            width: 50%; /* 길이 짧게 조정 */
+            margin: 20px auto;
+        }
+
         .copy-alert {
             position: fixed;
             top: 20px;
@@ -128,7 +134,7 @@
             자유롭게 배너를 달아주시면 됩니다.
         </p>
         
-        <hr>
+        <hr> 
 
         <h2>배너 이미지</h2>
         <div class="banner-section">
@@ -141,8 +147,6 @@
             </p>
         </div>
 
-        <hr>
-
         <h2>동맹 링크 주소</h2>
         <p style="font-size: 0.85em; color: #555;">
             아래 상자를 클릭하면 동맹의 메인 주소가 복사됩니다.
@@ -151,7 +155,7 @@
             https://osunia.github.io/bannermoa/
         </div>
 
-        <hr>
+        <hr> 
 
         <div class="footer">
             <p>©2025 bannermoa. All rights reserved.</p>
