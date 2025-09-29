@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배너모아 - 배너 수집가를 위한 동맹</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS 스타일 시작 */
+        body {
+            font-family: 'Gowun Dodum', Arial, sans-serif;
+            text-align: center;
+            margin: 30px;
+            background-color: #f4f4f9;
+            color: #333;
+            font-size: 0.95em;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-title {
+            color: #0056b3;
+            font-size: 2.2em;
+            margin-bottom: 0;
+        }
+        /* ⬇️ [핵심 수정] 부제 폰트 크기: 1.0em -> 0.85em */
+        .sub-title {
+            color: #555;
+            font-size: 0.85em; 
+            font-weight: normal;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        /* 추가 설명 리스트 (폰트 크기 유지: 0.95em) */
+        .intro-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto 30px auto; 
+            max-width: 450px; 
+            font-size: 0.95em; 
+            line-height: 1.6;
+            text-align: center;
+        }
+        .intro-list li {
+            color: #444;
+        }
+        
+        /* ⬇️ [핵심 수정] 기존 설명 문구 폰트 크기: 1.0em -> 0.85em */
+        p.description {
+            font-size: 0.85em; 
+            margin: 0 auto 25px auto; 
+            max-width: 450px; 
+            color: #555;
+            text-align: center; 
+            word-break: keep-all;
+        }
+        
+        .banner-section {
+            margin-bottom: 30px;
+        }
+        .banner-item {
+            margin: 10px auto;
+            display: block;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 32px;
+        }
+        .banner-item:hover {
+            transform: scale(1.1);
+        }
+        .banner-link-box {
+            background-color: #eee;
+            padding: 8px;
+            border: 1px dashed #ccc;
+            margin: 15px auto;
+            max-width: 350px;
+            font-size: 0.85em; /* 동맹 링크 주소 박스 폰트 크기 (기준) */
+            word-break: break-all;
+            cursor: copy;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #777;
+        }
+        .copy-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* CSS 스타일 끝 */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1 class="main-title">배너모아 ✨</h1>
+        <h2 class="sub-title">~ 배너 수집가를 위한 동맹 ~</h2>
+
+        <ul class="intro-list">
+            <li>어떤 형태의 배너든 마냥 좋다!</li>
+            <li>새로운 동맹 배너를 발견하면 기쁘다!</li>
+            <li>아무튼 배너 수집이 취미인 사람이다!</li>
+        </ul>
+        
+        <p class="description">
+            사이트, 동맹 배너를 수집하는 분들을 위한 페이지.<br>
+            가입 절차는 따로 없으며,<br>
+            자유롭게 배너를 달아주시면 됩니다.
+        </p>
+        
+        <hr>
+
+        <h2>배너 이미지</h2>
+        <div class="banner-section">
+            <div class="banner-item" onclick="copyToClipboard('https://i.imgur.com/7QbcKCP.png')">
+                <img src="https://i.imgur.com/7QbcKCP.png" alt="32x32 배너" width="32" height="32" style="border: 1px solid #ccc;">
+            </div>
+            
+            <p style="font-size: 0.85em; color: #777; margin-top: 5px;">
+                👆 이미지를 클릭하면 주소가 자동으로 복사됩니다.
+            </p>
+        </div>
+
+        <hr>
+
+        <h2>동맹 링크 주소</h2>
+        <p style="font-size: 0.85em; color: #555;">
+            아래 상자를 클릭하면 동맹의 메인 주소가 복사됩니다.
+        </p>
+        <div class="banner-link-box" id="allianceLink" onclick="copyLinkToClipboard()">
+            https://osunia.github.io/bannermoa/
+        </div>
+
+        <hr>
+
+        <div class="footer">
+            <p>©2025 bannermoa. All rights reserved.</p>
+        </div>
+
+    </div>
+
+    <div id="copyAlert" class="copy-alert">
+        주소가 복사되었습니다!
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showAlert();
+        }
+
+        function copyLinkToClipboard() {
+            const linkText = document.getElementById('allianceLink').innerText.trim();
+            copyToClipboard(linkText);
+        }
+
+        function showAlert() {
+            const alertBox = document.getElementById('copyAlert');
+            alertBox.style.opacity = '1';
+            setTimeout(() => {
+                alertBox.style.opacity = '0';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
