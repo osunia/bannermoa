@@ -49,6 +49,11 @@
                 1px 1px 0 #fff;
         }
 
+        /* 이모지 전용 스타일: 크기 조정 */
+        .emoji {
+            font-size: 0.85em;
+        }
+
         .sub-title {
             color: #333;
             font-size: 0.85em;
@@ -83,14 +88,13 @@
         }
         
         .banner-section {
-            margin-bottom: 30px;
+            margin-bottom: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
         }
         
-        /* ⬇️ [핵심 수정] 상하 여백 10px 추가: 줄 바꿈 시 배너 간 간격 확보 */
         .banner-item {
             margin: 10px 10px; 
             display: block;
@@ -115,9 +119,11 @@
         .banner-item:hover {
             transform: scale(1.05);
         }
-        .banner-section + p {
-            margin-top: 10px;
-            margin-bottom: 0;
+        
+        p.banner-copy-note {
+            font-size: 0.85em; 
+            color: #777; 
+            margin: 5px auto 20px auto;
         }
 
         .banner-link-box {
@@ -164,12 +170,12 @@
     <div class="container">
 
         <div class="header-area">
-            <h1 class="main-title">🌰배너모아🐿️</h1>
+            <h1 class="main-title"><span class="emoji">🌰</span>배너모아<span class="emoji">🐿️</span></h1>
             <h2 class="sub-title">배너 수집가를 위한 동맹</h2>
         </div>
         
         <ul class="intro-list">
-            <li>어떤 형태의 배너든 마냥 좋다!</li>
+            <li>차곡차곡 모은 배너만 봐도 배부르다!</li>
             <li>새로운 동맹 배너를 발견하면 기쁘다!</li>
             <li>아무튼 배너 수집이 취미인 사람이다!</li>
         </ul>
@@ -183,6 +189,11 @@
         <hr> 
 
         <h2>배너 이미지</h2>
+        
+        <p class="banner-copy-note">
+            이미지를 클릭하면 주소가 복사됩니다.
+        </p>
+        
         <div class="banner-section">
             <div class="banner-item banner-200x40" onclick="copyToClipboard('https://i.imgur.com/wiqMlDv.png')">
                 <img src="https://i.imgur.com/wiqMlDv.png" alt="200x40 배너">
@@ -193,10 +204,6 @@
             </div>
         </div>
         
-        <p style="font-size: 0.85em; color: #777; margin-top: 5px;">
-            이미지를 클릭하면 주소가 복사됩니다.
-        </p>
-
         <h2>동맹 링크 주소</h2>
         <p style="font-size: 0.85em; color: #555;">
             아래 상자를 클릭하면 동맹 주소가 복사됩니다.
