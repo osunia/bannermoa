@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
 <script type="text/javascript">
 // <![CDATA[
 var colour="custom"; // "custom"을 사용하여 사용자 정의 색상을 활성화합니다.
@@ -263,3 +266,488 @@ function newColour() {
 }
 // ]]>
 </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌰배너모아🐿️ - 배너 수집가를 위한 동맹</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    
+    <script type="text/javascript">
+    // <![CDATA[
+    var colour="custom";
+    var sparkles=50;
+
+    /****************************
+    * Tinkerbell Magic Sparkle *
+    *(c)2005-13 mf2fm web-design*
+    * http://www.mf2fm.com/rv  *
+    * DON'T EDIT BELOW THIS BOX *
+    ****************************/
+    var x=ox=400;
+    var y=oy=300;
+    var swide=800;
+    var shigh=600;
+    var sleft=sdown=0;
+    var tiny=new Array();
+    var star=new Array();
+    var starv=new Array();
+    var starx=new Array();
+    var stary=new Array();
+    var tinyx=new Array();
+    var tinyy=new Array();
+    var tinyv=new Array();
+
+    // ⬇️ [핵심 수정] 사용자 정의 색상 배열 정의
+    var customColours = [
+        "#A52A2A", // 갈색 (Brown)
+        "#D2B48C", // 연갈색 (Tan)
+        "#F5DEB3", // 연노랑 (Wheat)
+        "#B8860B", // 진한 황금색
+        "#DEB887", // 부드러운 나무색
+        "#FFD700"  // 황금색 (밝은 노란색 계열)
+    ];
+    
+    // ⬇️ [수정 2] 기존 파티클 스크립트의 window.onload 내용을 별도의 함수로 분리
+    function initializeSparkles() { 
+        if (document.getElementById) {
+            var i, rats, rlef, rdow;
+            for (var i=0; i<sparkles; i++) {
+                var rats=createDiv(3, 3);
+                rats.style.visibility="hidden";
+                rats.style.zIndex="999";
+                document.body.appendChild(tiny[i]=rats);
+                starv[i]=0;
+                tinyv[i]=0;
+                var rats=createDiv(5, 5);
+                rats.style.backgroundColor="transparent";
+                rats.style.visibility="hidden";
+                rats.style.zIndex="999";
+                var rlef=createDiv(1, 5);
+                var rdow=createDiv(5, 1);
+                rats.appendChild(rlef);
+                rats.appendChild(rdow);
+                rlef.style.top="2px";
+                rlef.style.left="0px";
+                rdow.style.top="0px";
+                rdow.style.left="2px";
+                document.body.appendChild(star[i]=rats);
+            }
+            set_width();
+            sparkle();
+        }
+    }
+
+    function sparkle() {
+        var c;
+        if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
+            ox=x;
+            oy=y;
+            for (c=0; c<sparkles; c++) if (!starv[c]) {
+                star[c].style.left=(starx[c]=x)+"px";
+                star[c].style.top=(stary[c]=y+1)+"px";
+                star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+                var selectedColour = (colour == "custom" || colour == "random") ? newColour() : colour;
+                star[c].childNodes[0].style.backgroundColor = star[c].childNodes[1].style.backgroundColor = selectedColour;
+                star[c].style.visibility="visible";
+                starv[c]=50;
+                break;
+            }
+        }
+        for (c=0; c<sparkles; c++) {
+            if (starv[c]) update_star(c);
+            if (tinyv[c]) update_tiny(c);
+        }
+        setTimeout("sparkle()", 40);
+    }
+
+    function update_star(i) {
+        if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+        if (starv[i]) {
+            stary[i]+=1+Math.random()*3;
+            starx[i]+=(i%5-2)/5;
+            if (stary[i]<shigh+sdown) {
+                star[i].style.top=stary[i]+"px";
+                star[i].style.left=starx[i]+"px";
+            }
+            else {
+                star[i].style.visibility="hidden";
+                starv[i]=0;
+                return;
+            }
+        }
+        else {
+            tinyv[i]=50;
+            tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+            tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+            tiny[i].style.width="2px";
+            tiny[i].style.height="2px";
+            tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
+            star[i].style.visibility="hidden";
+            tiny[i].style.visibility="visible"
+        }
+    }
+
+    function update_tiny(i) {
+        if (--tinyv[i]==25) {
+            tiny[i].style.width="1px";
+            tiny[i].style.height="1px";
+        }
+        if (tinyv[i]) {
+            tinyy[i]+=1+Math.random()*3;
+            tinyx[i]+=(i%5-2)/5;
+            if (tinyy[i]<shigh+sdown) {
+                tiny[i].style.top=tinyy[i]+"px";
+                tiny[i].style.left=tinyx[i]+"px";
+            }
+            else {
+                tiny[i].style.visibility="hidden";
+                tinyv[i]=0;
+                return;
+            }
+        }
+        else tiny[i].style.visibility="hidden";
+    }
+
+    document.onmousemove=mouse;
+    function mouse(e) {
+        if (e) {
+            y=e.pageY;
+            x=e.pageX;
+        }
+        else {
+            set_scroll();
+            y=event.y+sdown;
+            x=event.x+sleft;
+        }
+    }
+
+    window.onscroll=set_scroll;
+    function set_scroll() {
+        if (typeof(self.pageYOffset)=='number') {
+            sdown=self.pageYOffset;
+            sleft=self.pageXOffset;
+        }
+        else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+            sdown=document.body.scrollTop;
+            sleft=document.body.scrollLeft;
+        }
+        else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+            sleft=document.documentElement.scrollLeft;
+            sdown=document.documentElement.scrollTop;
+        }
+        else {
+            sdown=0;
+            sleft=0;
+        }
+    }
+
+    window.onresize=set_width;
+    function set_width() {
+        var sw_min=999999;
+        var sh_min=999999;
+        if (document.documentElement && document.documentElement.clientWidth) {
+            if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
+            if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
+        }
+        if (typeof(self.innerWidth)=='number' && self.innerWidth) {
+            if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
+            if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
+        }
+        if (document.body.clientWidth) {
+            if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
+            if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
+        }
+        if (sw_min==999999 || sh_min==999999) {
+            sw_min=800;
+            sh_min=600;
+        }
+        swide=sw_min;
+        shigh=sh_min;
+    }
+
+    function createDiv(height, width) {
+        var div=document.createElement("div");
+        div.style.position="absolute";
+        div.style.height=height+"px";
+        div.style.width=width+"px";
+        div.style.overflow="hidden";
+        return (div);
+    }
+
+    function newColour() {
+        var index = Math.floor(Math.random() * customColours.length);
+        return customColours[index];
+    }
+    // ]]>
+    </script>
+    
+    <style>
+        /* CSS 스타일 시작 */
+        body {
+            font-family: 'Gowun Dodum', Arial, sans-serif;
+            text-align: center;
+            margin: 30px;
+            background-image: url('https://i.imgur.com/He4toTS.jpeg');
+            background-size: cover; 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center center;
+            
+            background-color: #f4f4f9; 
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        /* ⬇️ [핵심 수정 1] .container를 처음에는 완전히 숨김 (opacity: 0) */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: #fff; 
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            
+            /* 초기 상태: 숨김 */
+            opacity: 0; 
+            /* 서서히 나타나는 애니메이션 효과를 위한 설정 */
+            transition: opacity 1s ease-in-out; 
+        }
+
+        /* ⬇️ [핵심 수정 2] 로딩 완료 시점에 .loaded 클래스를 추가하여 보이게 함 */
+        .container.loaded {
+            opacity: 1;
+        }
+        
+        .header-area {
+            background-image: url('https://i.imgur.com/4iyJbxE.png'); 
+            background-size: cover;
+            background-position: center;
+            padding: 20px 0;
+            margin: -25px -25px 30px -25px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-title {
+            color: #645d55;
+            font-size: 2.2em;
+            margin-bottom: 0;
+            text-shadow: 
+                -1px -1px 0 #fff,  
+                1px -1px 0 #fff,
+                -1px 1px 0 #fff,
+                1px 1px 0 #fff;
+        }
+
+        /* 이모지 전용 스타일: 크기 조정 */
+        .emoji {
+            font-size: 0.85em;
+        }
+
+        .sub-title {
+            color: #333;
+            font-size: 0.85em;
+            font-weight: normal;
+            margin: 5px auto 0 auto;
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.7); 
+            border-radius: 4px;
+        }
+
+        .intro-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto 30px auto; 
+            max-width: 450px; 
+            font-size: 0.95em; 
+            line-height: 1.6;
+            text-align: center;
+        }
+        .intro-list li {
+            color: #444;
+        }
+        
+        p.description {
+            font-size: 0.85em; 
+            margin: 0 auto 25px auto; 
+            max-width: 450px; 
+            color: #555;
+            text-align: center; 
+            word-break: keep-all;
+        }
+        
+        .banner-section {
+            margin-bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .banner-item {
+            margin: 10px 10px; 
+            display: block;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        /* 32x32px 기본 배너 이미지 스타일 */
+        .banner-item img {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ccc;
+            display: block;
+        }
+        
+        /* 200x40px 배너를 위한 전용 클래스 */
+        .banner-200x40 img {
+            width: 200px;
+            height: 40px;
+        }
+
+        .banner-item:hover {
+            transform: scale(1.05);
+        }
+        
+        p.banner-copy-note {
+            font-size: 0.85em; 
+            color: #777; 
+            margin: 5px auto 20px auto;
+        }
+
+        .banner-link-box {
+            background-color: #eee;
+            padding: 8px;
+            border: 1px dashed #ccc;
+            margin: 15px auto;
+            max-width: 350px;
+            font-size: 0.85em;
+            word-break: break-all;
+            cursor: copy;
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #777;
+        }
+        
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        .copy-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* CSS 스타일 끝 */
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="header-area">
+            <h1 class="main-title"><span class="emoji">🌰</span>배너모아<span class="emoji">🐿️</span></h1>
+            <h2 class="sub-title">배너 수집가를 위한 동맹</h2>
+        </div>
+        
+        <ul class="intro-list">
+            <li>차곡차곡 모은 배너만 봐도 배부르다!</li>
+            <li>새로운 동맹 배너를 발견하면 기쁘다!</li>
+            <li>아무튼 배너 수집이 취미인 사람이다!</li>
+        </ul>
+        
+        <p class="description">
+            사이트, 동맹 배너를 수집하는 분들을 위한 페이지.<br>
+            가입 절차는 따로 없으며,<br>
+            자유롭게 배너를 달아주시면 됩니다.
+        </p>
+        
+        <hr> 
+
+        <h2>배너 이미지</h2>
+        
+        <p class="banner-copy-note">
+            이미지를 클릭하면 주소가 복사됩니다.
+        </p>
+        
+        <div class="banner-section">
+            <div class="banner-item banner-200x40" onclick="copyToClipboard('https://i.imgur.com/wiqMlDv.png')">
+                <img src="https://i.imgur.com/wiqMlDv.png" alt="200x40 배너">
+            </div>
+            
+            <div class="banner-item" onclick="copyToClipboard('https://i.imgur.com/9PvHBeM.png')">
+                <img src="https://i.imgur.com/9PvHBeM.png" alt="32x32 배너">
+            </div>
+        </div>
+        
+        <h2>동맹 링크 주소</h2>
+        <p style="font-size: 0.85em; color: #555;">
+            아래 상자를 클릭하면 동맹 주소가 복사됩니다.
+        </p>
+        <div class="banner-link-box" id="allianceLink" onclick="copyLinkToClipboard()">
+            https://osunia.github.io/bannermoa/
+        </div>
+
+        <hr> 
+
+        <div class="footer">
+            <p>©2025 bannermoa. All rights reserved.</p>
+        </div>
+
+    </div>
+
+    <div id="copyAlert" class="copy-alert">
+        주소가 복사되었습니다!
+    </div>
+
+    <script>
+        // ⬇️ [수정 3] 기존 window.onload를 통합하여 두 가지 기능을 모두 실행
+        window.onload = function() {
+            // 1. 페이지 콘텐츠를 서서히 나타나게 함 (이전 로딩 효과)
+            document.querySelector('.container').classList.add('loaded');
+            
+            // 2. 파티클 애니메이션을 시작함 (새로 추가된 기능)
+            initializeSparkles(); 
+        };
+
+        function copyToClipboard(text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showAlert();
+        }
+
+        function copyLinkToClipboard() {
+            const linkText = document.getElementById('allianceLink').innerText.trim();
+            copyToClipboard(linkText);
+        }
+
+        function showAlert() {
+            const alertBox = document.getElementById('copyAlert');
+            alertBox.style.opacity = '1';
+            setTimeout(() => {
+                alertBox.style.opacity = '0';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
