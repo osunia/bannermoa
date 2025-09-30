@@ -260,7 +260,6 @@ function newColour() {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-    
         
     <style>
         /* CSS 스타일 시작 */
@@ -384,7 +383,7 @@ function newColour() {
         }
         
         p.description {
-            font-size: 0.85em; 
+            font-size: 0.85em; 
             /* ⬇️ [간격 수정 유지] 설명 문구 아래 여백 줄임 */
             margin: 0 auto 15px auto; 
             /* ⬇️ [유지] max-width 제거 상태 유지 */
@@ -394,7 +393,7 @@ function newColour() {
         }
         
         .banner-section {
-            margin-bottom: 0;
+            margin-bottom: 5px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -402,7 +401,7 @@ function newColour() {
         }
         
         .banner-item {
-            margin: 10px 10px; 
+            margin: 10px 10px; 
             display: block;
             cursor: pointer;
             transition: transform 0.2s;
@@ -427,20 +426,20 @@ function newColour() {
         }
         
         p.banner-copy-note {
-            font-size: 0.85em; 
-            color: #777; 
-            /* ⬇️ [간격 수정 유지] 배너 설명 아래 여백 줄임 */
-            margin: 5px auto 10px auto; 
+            font-size: 0.85em; 
+            color: #777; 
+            /* ⬇️ [간격 수정] 배너 설명 아래 여백 늘림 */
+            margin: 5px auto 25px auto; 
             text-align: center; 
         }
 
         .banner-link-box {
+            display: inline-block;
             background-color: #eee;
-            padding: 8px;
+            /* ⚠️ [변경 2] padding: 8px; -> padding: 8px 24px; 좌우 여백 24px 추가 */
+            padding: 8px 24px; 
             border: 1px dashed #ccc;
-            /* ⬇️ [간격 수정 유지] 링크 박스 상하 여백 줄임 */
-            margin: 10px auto; 
-            max-width: 350px;
+            margin: 10px auto 5px auto; 
             font-size: 0.85em;
             word-break: break-all;
             cursor: copy;
@@ -452,18 +451,29 @@ function newColour() {
         }
         
         .footer {
-            margin-top: 40px;
+            /* ⚠️ [변경 4] margin-top: 40px; -> margin-top: 25px; 푸터 상단 여백 줄임 */
+            margin-top: 25px; 
             font-size: 0.8em;
             color: #777;
             text-align: center; 
+        }
+
+        /* ⬇️ [유지] 관리자 텍스트 링크 스타일 */
+        .footer a {
+            color: #777;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
         }
         
         hr {
             border: 0;
             border-top: 1px solid #ddd;
             width: 50%;
-            /* ⬇️ [간격 수정 유지] hr 상하 여백 줄임 */
-            margin: 15px auto; 
+            /* ⚠️ [변경 1] margin: 15px auto; -> margin: 25px auto; 구분선 상하 여백 늘림 */
+            margin: 25px auto; 
         }
 
         .copy-alert {
@@ -506,14 +516,8 @@ function newColour() {
             자유롭게 배너를 달아주시면 됩니다.
         </p>
         
-        <hr> 
+        <hr>  
 
-        <h2>배너 이미지</h2>
-        
-        <p class="banner-copy-note">
-            이미지를 클릭하면 주소가 복사됩니다.
-        </p>
-        
         <div class="banner-section">
             <div class="banner-item banner-200x40" onclick="copyToClipboard('https://i.imgur.com/wiqMlDv.png')">
                 <img src="https://i.imgur.com/wiqMlDv.png" alt="200x40 배너">
@@ -524,18 +528,25 @@ function newColour() {
             </div>
         </div>
         
-        <h2>동맹 링크 주소</h2>
-        <p style="font-size: 0.85em; color: #555;">
-            아래 상자를 클릭하면 동맹 주소가 복사됩니다.
+        <p class="banner-copy-note">
+            이미지를 클릭하면 주소가 복사됩니다.
         </p>
+        
         <div class="banner-link-box" id="allianceLink" onclick="copyLinkToClipboard()">
             https://osunia.github.io/bannermoa/
         </div>
 
-        <hr> 
+        <p style="font-size: 0.85em; color: #555; margin-top: 5px; margin-bottom: 25px;">
+             상자를 클릭하면 동맹 주소가 복사됩니다.
+        </p>
+        
+        <hr>  
 
         <div class="footer">
-            <p>©2025 bannermoa. All rights reserved.</p>
+            <p style="margin-bottom: 3px;">©2025 bannermoa. All rights reserved.</p>
+            <p style="margin-top: 0;">
+                <a href="https://sardina.tistory.com/" target="_blank">관리자 R</a>
+            </p>
         </div>
 
     </div>
@@ -552,7 +563,7 @@ function newColour() {
             
             // 2. PC (데스크톱) 환경일 때만 파티클 애니메이션을 시작함
             if (!isMobile()) {
-                initializeSparkles(); 
+                initializeSparkles();  
             }
         };
 
