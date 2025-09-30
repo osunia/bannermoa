@@ -8,6 +8,269 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
     
+    <script type="text/javascript">
+// <![CDATA[
+var colour="custom"; // "custom"을 사용하여 사용자 정의 색상을 활성화합니다.
+var sparkles=50;
+
+/****************************
+* Tinkerbell Magic Sparkle *
+*(c)2005-13 mf2fm web-design*
+* http://www.mf2fm.com/rv  *
+* DON'T EDIT BELOW THIS BOX *
+****************************/
+var x=ox=400;
+var y=oy=300;
+var swide=800;
+var shigh=600;
+var sleft=sdown=0;
+var tiny=new Array();
+var star=new Array();
+var starv=new Array();
+var starx=new Array();
+var stary=new Array();
+var tinyx=new Array();
+var tinyy=new Array();
+var tinyv=new Array();
+var last_scroll_time = 0; // 스크롤 파티클 생성 간격 조절용 변수
+
+// ⬇️ [핵심 수정] 사용자 정의 색상 배열 정의
+var customColours = [
+    "#A52A2A", // 갈색 (Brown)
+    "#D2B48C", // 연갈색 (Tan)
+    "#F5DEB3", // 연노랑 (Wheat)
+    "#B8860B", // 진한 황금색
+    "#DEB887", // 부드러운 나무색
+    "#FFD700"  // 황금색 (밝은 노란색 계열)
+];
+
+// ⬇️ [추가] 모바일 환경 감지 함수
+function isMobile() {
+    var userAgent = navigator.userAgent.toLowerCase();
+    return /android|iphone|ipad|ipod|blackberry|windows phone/g.test(userAgent);
+}
+
+// ⬇️ [수정] 기존 window.onload 내용을 initializeSparkles 함수로 분리 (중복 방지)
+function initializeSparkles() { 
+    if (document.getElementById) {
+        var i, rats, rlef, rdow;
+        for (var i=0; i<sparkles; i++) {
+            var rats=createDiv(3, 3);
+            rats.style.visibility="hidden";
+            rats.style.zIndex="999";
+            document.body.appendChild(tiny[i]=rats);
+            starv[i]=0;
+            tinyv[i]=0;
+            var rats=createDiv(5, 5);
+            rats.style.backgroundColor="transparent";
+            rats.style.visibility="hidden";
+            rats.style.zIndex="999";
+            var rlef=createDiv(1, 5);
+            var rdow=createDiv(5, 1);
+            rats.appendChild(rlef);
+            rats.appendChild(rdow);
+            rlef.style.top="2px";
+            rlef.style.left="0px";
+            rdow.style.top="0px";
+            rdow.style.left="2px";
+            document.body.appendChild(star[i]=rats);
+        }
+        set_width();
+        sparkle();
+    }
+}
+// ⬇️ [수정] 이벤트 핸들러 설정 로직 분리 및 통합
+(function setupEvents() {
+    if (isMobile()) {
+        // 모바일 환경: 터치 및 스크롤 이벤트에 반응
+        document.addEventListener('touchmove', touchMove, { passive: true });
+        document.addEventListener('touchstart', touchMove, { passive: true }); // 터치 시작 시에도 파티클 생성
+        
+        // ⬇️ [추가] 모바일 환경에서 스크롤 시에도 파티클 생성
+        window.addEventListener('scroll', scrollMove, { passive: true });
+        
+    } else {
+        // PC 환경: 마우스 움직임 이벤트에 반응
+        document.onmousemove=mouse;
+    }
+})();
+
+function sparkle() {
+    var c;
+    if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
+        ox=x;
+        oy=y;
+        for (c=0; c<sparkles; c++) if (!starv[c]) {
+            star[c].style.left=(starx[c]=x)+"px";
+            star[c].style.top=(stary[c]=y+1)+"px";
+            star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+            var selectedColour = (colour == "custom" || colour == "random") ? newColour() : colour;
+            star[c].childNodes[0].style.backgroundColor = star[c].childNodes[1].style.backgroundColor = selectedColour;
+            star[c].style.visibility="visible";
+            starv[c]=50;
+            break;
+        }
+    }
+    for (c=0; c<sparkles; c++) {
+        if (starv[c]) update_star(c);
+        if (tinyv[c]) update_tiny(c);
+    }
+    setTimeout("sparkle()", 40);
+}
+
+function update_star(i) {
+    if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+    if (starv[i]) {
+        stary[i]+=1+Math.random()*3;
+        starx[i]+=(i%5-2)/5;
+        if (stary[i]<shigh+sdown) {
+            star[i].style.top=stary[i]+"px";
+            star[i].style.left=starx[i]+"px";
+        }
+        else {
+            star[i].style.visibility="hidden";
+            starv[i]=0;
+            return;
+        }
+    }
+    else {
+        tinyv[i]=50;
+        tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+        tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+        tiny[i].style.width="2px";
+        tiny[i].style.height="2px";
+        tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
+        star[i].style.visibility="hidden";
+        tiny[i].style.visibility="visible"
+    }
+}
+
+function update_tiny(i) {
+    if (--tinyv[i]==25) {
+        tiny[i].style.width="1px";
+        tiny[i].style.height="1px";
+    }
+    if (tinyv[i]) {
+        tinyy[i]+=1+Math.random()*3;
+        tinyx[i]+=(i%5-2)/5;
+        if (tinyy[i]<shigh+sdown) {
+            tiny[i].style.top=tinyy[i]+"px";
+            tiny[i].style.left=tinyx[i]+"px";
+        }
+        else {
+            tiny[i].style.visibility="hidden";
+            tinyv[i]=0;
+            return;
+        }
+    }
+    else tiny[i].style.visibility="hidden";
+}
+
+// ⬇️ [수정] PC용 마우스 이벤트 핸들러
+function mouse(e) {
+    if (e) {
+        y=e.pageY;
+        x=e.pageX;
+    }
+    else {
+        set_scroll();
+        y=event.y+sdown;
+        x=event.x+sleft;
+    }
+}
+
+// ⬇️ [추가] 모바일용 터치 이벤트 핸들러
+function touchMove(e) {
+    if (e.touches.length > 0) {
+        // 터치 위치로 x, y 업데이트
+        y = e.touches[0].pageY;
+        x = e.touches[0].pageX;
+        // sparkle() 함수는 x, ox 비교를 통해 파티클 생성
+    }
+}
+
+// ⬇️ [추가] 모바일/PC 스크롤 이벤트 핸들러
+function scrollMove() {
+    var now = Date.now();
+    // 너무 자주 생성되는 것을 방지하기 위해 100ms 간격으로 제한
+    if (now - last_scroll_time < 100) return; 
+    
+    last_scroll_time = now;
+    set_scroll(); // 스크롤 위치 업데이트
+
+    // 현재 뷰포트 중앙 (x는 중앙, y는 스크롤 위치) 근처에 파티클을 생성하도록 x, y 값 설정
+    // x를 중앙으로 설정하여 화면 중앙 근처에 파티클이 보이도록 합니다.
+    x = sleft + swide / 2;
+    // y를 뷰포트 중간으로 설정하여 스크롤 시 화면 중앙에서 파티클이 발생하도록 합니다.
+    y = sdown + shigh / 2;
+    
+    // 강제로 파티클을 생성하기 위해 ox, oy 값을 현재 x, y와 다르게 설정
+    ox = -1; 
+    oy = -1; 
+    // sparkle 함수가 다음 루프에서 파티클을 생성하게 됩니다.
+}
+
+window.onscroll=set_scroll; // 기존 스크롤 위치 업데이트 유지
+
+function set_scroll() {
+    if (typeof(self.pageYOffset)=='number') {
+        sdown=self.pageYOffset;
+        sleft=self.pageXOffset;
+    }
+    else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+        sdown=document.body.scrollTop;
+        sleft=document.body.scrollLeft;
+    }
+    else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+        sleft=document.documentElement.scrollLeft;
+        sdown=document.documentElement.scrollTop;
+    }
+    else {
+        sdown=0;
+        sleft=0;
+    }
+}
+
+window.onresize=set_width;
+function set_width() {
+    var sw_min=999999;
+    var sh_min=999999;
+    if (document.documentElement && document.documentElement.clientWidth) {
+        if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
+        if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
+    }
+    if (typeof(self.innerWidth)=='number' && self.innerWidth) {
+        if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
+        if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
+    }
+    if (document.body.clientWidth) {
+        if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
+        if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
+    }
+    if (sw_min==999999 || sh_min==999999) {
+        sw_min=800;
+        sh_min=600;
+    }
+    swide=sw_min;
+    shigh=sh_min;
+}
+
+function createDiv(height, width) {
+    var div=document.createElement("div");
+    div.style.position="absolute";
+    div.style.height=height+"px";
+    div.style.width=width+"px";
+    div.style.overflow="hidden";
+    return (div);
+}
+
+function newColour() {
+    var index = Math.floor(Math.random() * customColours.length);
+    return customColours[index];
+}
+// ]]>
+</script>
+    
     <style>
         /* CSS 스타일 시작 */
         body {
@@ -243,10 +506,13 @@
     </div>
 
     <script>
-        // ⬇️ [핵심 수정 3] 페이지 로드 완료 시점에 .container에 .loaded 클래스를 추가하는 스크립트
+        // ⬇️ [수정 3] 기존 window.onload를 통합하여 두 가지 기능을 모두 실행
         window.onload = function() {
-            // <body> 안의 모든 콘텐츠(이미지 포함) 로드가 완료되었을 때 실행됩니다.
+            // 1. 페이지 콘텐츠를 서서히 나타나게 함 (이전 로딩 효과)
             document.querySelector('.container').classList.add('loaded');
+            
+            // 2. 파티클 애니메이션을 시작함 (새로 추가된 기능)
+            initializeSparkles(); 
         };
 
         function copyToClipboard(text) {
