@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌰배너모아🐿️ - 배너 수집가를 위한 동맹</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-    
-    <script type="text/javascript">
+<script type="text/javascript">
 // <![CDATA[
 var colour="custom"; // "custom"을 사용하여 사용자 정의 색상을 활성화합니다.
 var sparkles=50;
@@ -33,6 +23,7 @@ var tinyx=new Array();
 var tinyy=new Array();
 var tinyv=new Array();
 var last_scroll_time = 0; // 스크롤 파티클 생성 간격 조절용 변수
+var is_active = false; // ⬇️ [추가] 파티클 생성을 제어할 플래그
 
 // ⬇️ [핵심 수정] 사용자 정의 색상 배열 정의
 var customColours = [
@@ -50,7 +41,7 @@ function isMobile() {
     return /android|iphone|ipad|ipod|blackberry|windows phone/g.test(userAgent);
 }
 
-// ⬇️ [수정] 기존 window.onload 내용을 initializeSparkles 함수로 분리 (중복 방지)
+// ⬇️ [유지] 기존 window.onload 내용을 initializeSparkles 함수로 분리 (중복 방지)
 function initializeSparkles() { 
     if (document.getElementById) {
         var i, rats, rlef, rdow;
@@ -79,27 +70,27 @@ function initializeSparkles() {
         sparkle();
     }
 }
-// ⬇️ [수정] 이벤트 핸들러 설정 로직 분리 및 통합
+// ⬇️ [유지] 이벤트 핸들러 설정 로직 분리 및 통합
 (function setupEvents() {
     if (isMobile()) {
-        // 모바일 환경: 터치 및 스크롤 이벤트에 반응
         document.addEventListener('touchmove', touchMove, { passive: true });
-        document.addEventListener('touchstart', touchMove, { passive: true }); // 터치 시작 시에도 파티클 생성
-        
-        // ⬇️ [추가] 모바일 환경에서 스크롤 시에도 파티클 생성
+        document.addEventListener('touchstart', touchMove, { passive: true }); 
         window.addEventListener('scroll', scrollMove, { passive: true });
         
     } else {
-        // PC 환경: 마우스 움직임 이벤트에 반응
         document.onmousemove=mouse;
     }
 })();
 
 function sparkle() {
     var c;
-    if (Math.abs(x-ox)>1 || Math.abs(y-oy)>1) {
+    
+    // ⬇️ [핵심 수정] is_active가 true일 때만 파티클 생성 로직을 실행
+    if (is_active && (Math.abs(x-ox)>1 || Math.abs(y-oy)>1)) {
         ox=x;
         oy=y;
+        is_active = false; // 파티클 생성 요청 처리 후 플래그 초기화
+        
         for (c=0; c<sparkles; c++) if (!starv[c]) {
             star[c].style.left=(starx[c]=x)+"px";
             star[c].style.top=(stary[c]=y+1)+"px";
@@ -111,6 +102,7 @@ function sparkle() {
             break;
         }
     }
+    
     for (c=0; c<sparkles; c++) {
         if (starv[c]) update_star(c);
         if (tinyv[c]) update_tiny(c);
@@ -177,37 +169,38 @@ function mouse(e) {
         y=event.y+sdown;
         x=event.x+sleft;
     }
+    // 마우스가 움직일 때 파티클 생성을 요청합니다.
+    is_active = true; 
 }
 
-// ⬇️ [추가] 모바일용 터치 이벤트 핸들러
+// ⬇️ [수정] 모바일용 터치 이벤트 핸들러
 function touchMove(e) {
     if (e.touches.length > 0) {
-        // 터치 위치로 x, y 업데이트
         y = e.touches[0].pageY;
         x = e.touches[0].pageX;
-        // sparkle() 함수는 x, ox 비교를 통해 파티클 생성
+        // 터치가 발생했을 때 파티클 생성을 요청합니다.
+        is_active = true; 
     }
 }
 
-// ⬇️ [추가] 모바일/PC 스크롤 이벤트 핸들러
+// ⬇️ [수정] 모바일/PC 스크롤 이벤트 핸들러
 function scrollMove() {
     var now = Date.now();
     // 너무 자주 생성되는 것을 방지하기 위해 100ms 간격으로 제한
     if (now - last_scroll_time < 100) return; 
     
     last_scroll_time = now;
-    set_scroll(); // 스크롤 위치 업데이트
+    set_scroll(); 
 
-    // 현재 뷰포트 중앙 (x는 중앙, y는 스크롤 위치) 근처에 파티클을 생성하도록 x, y 값 설정
-    // x를 중앙으로 설정하여 화면 중앙 근처에 파티클이 보이도록 합니다.
+    // 현재 뷰포트 중앙에 파티클 생성 위치 설정
     x = sleft + swide / 2;
-    // y를 뷰포트 중간으로 설정하여 스크롤 시 화면 중앙에서 파티클이 발생하도록 합니다.
     y = sdown + shigh / 2;
     
-    // 강제로 파티클을 생성하기 위해 ox, oy 값을 현재 x, y와 다르게 설정
+    // 스크롤 시 파티클 생성을 요청합니다.
+    // 스크롤은 강제 생성이 필요하므로 ox, oy를 현재 x, y와 다르게 설정합니다.
     ox = -1; 
-    oy = -1; 
-    // sparkle 함수가 다음 루프에서 파티클을 생성하게 됩니다.
+    oy = -1;
+    is_active = true;
 }
 
 window.onscroll=set_scroll; // 기존 스크롤 위치 업데이트 유지
@@ -270,273 +263,3 @@ function newColour() {
 }
 // ]]>
 </script>
-    
-    <style>
-        /* CSS 스타일 시작 */
-        body {
-            font-family: 'Gowun Dodum', Arial, sans-serif;
-            text-align: center;
-            margin: 30px;
-            background-image: url('https://i.imgur.com/He4toTS.jpeg');
-            background-size: cover; 
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center center;
-            
-            background-color: #f4f4f9; 
-            color: #333;
-            font-size: 0.95em;
-        }
-
-        /* ⬇️ [핵심 수정 1] .container를 처음에는 완전히 숨김 (opacity: 0) */
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 25px;
-            background-color: #fff; 
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            
-            /* 초기 상태: 숨김 */
-            opacity: 0; 
-            /* 서서히 나타나는 애니메이션 효과를 위한 설정 */
-            transition: opacity 1s ease-in-out; 
-        }
-
-        /* ⬇️ [핵심 수정 2] 로딩 완료 시점에 .loaded 클래스를 추가하여 보이게 함 */
-        .container.loaded {
-            opacity: 1;
-        }
-        
-        .header-area {
-            background-image: url('https://i.imgur.com/4iyJbxE.png'); 
-            background-size: cover;
-            background-position: center;
-            padding: 20px 0;
-            margin: -25px -25px 30px -25px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .main-title {
-            color: #645d55;
-            font-size: 2.2em;
-            margin-bottom: 0;
-            text-shadow: 
-                -1px -1px 0 #fff,  
-                1px -1px 0 #fff,
-                -1px 1px 0 #fff,
-                1px 1px 0 #fff;
-        }
-
-        /* 이모지 전용 스타일: 크기 조정 */
-        .emoji {
-            font-size: 0.85em;
-        }
-
-        .sub-title {
-            color: #333;
-            font-size: 0.85em;
-            font-weight: normal;
-            margin: 5px auto 0 auto;
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: rgba(255, 255, 255, 0.7); 
-            border-radius: 4px;
-        }
-
-        .intro-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px auto 30px auto; 
-            max-width: 450px; 
-            font-size: 0.95em; 
-            line-height: 1.6;
-            text-align: center;
-        }
-        .intro-list li {
-            color: #444;
-        }
-        
-        p.description {
-            font-size: 0.85em; 
-            margin: 0 auto 25px auto; 
-            max-width: 450px; 
-            color: #555;
-            text-align: center; 
-            word-break: keep-all;
-        }
-        
-        .banner-section {
-            margin-bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .banner-item {
-            margin: 10px 10px; 
-            display: block;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        /* 32x32px 기본 배너 이미지 스타일 */
-        .banner-item img {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #ccc;
-            display: block;
-        }
-        
-        /* 200x40px 배너를 위한 전용 클래스 */
-        .banner-200x40 img {
-            width: 200px;
-            height: 40px;
-        }
-
-        .banner-item:hover {
-            transform: scale(1.05);
-        }
-        
-        p.banner-copy-note {
-            font-size: 0.85em; 
-            color: #777; 
-            margin: 5px auto 20px auto;
-        }
-
-        .banner-link-box {
-            background-color: #eee;
-            padding: 8px;
-            border: 1px dashed #ccc;
-            margin: 15px auto;
-            max-width: 350px;
-            font-size: 0.85em;
-            word-break: break-all;
-            cursor: copy;
-        }
-        .footer {
-            margin-top: 40px;
-            font-size: 0.8em;
-            color: #777;
-        }
-        
-        hr {
-            border: 0;
-            border-top: 1px solid #ddd;
-            width: 50%;
-            margin: 20px auto;
-        }
-
-        .copy-alert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        /* CSS 스타일 끝 */
-    </style>
-</head>
-<body>
-
-    <div class="container">
-
-        <div class="header-area">
-            <h1 class="main-title"><span class="emoji">🌰</span>배너모아<span class="emoji">🐿️</span></h1>
-            <h2 class="sub-title">배너 수집가를 위한 동맹</h2>
-        </div>
-        
-        <ul class="intro-list">
-            <li>차곡차곡 모은 배너만 봐도 배부르다!</li>
-            <li>새로운 동맹 배너를 발견하면 기쁘다!</li>
-            <li>아무튼 배너 수집이 취미인 사람이다!</li>
-        </ul>
-        
-        <p class="description">
-            사이트, 동맹 배너를 수집하는 분들을 위한 페이지.<br>
-            가입 절차는 따로 없으며,<br>
-            자유롭게 배너를 달아주시면 됩니다.
-        </p>
-        
-        <hr> 
-
-        <h2>배너 이미지</h2>
-        
-        <p class="banner-copy-note">
-            이미지를 클릭하면 주소가 복사됩니다.
-        </p>
-        
-        <div class="banner-section">
-            <div class="banner-item banner-200x40" onclick="copyToClipboard('https://i.imgur.com/wiqMlDv.png')">
-                <img src="https://i.imgur.com/wiqMlDv.png" alt="200x40 배너">
-            </div>
-            
-            <div class="banner-item" onclick="copyToClipboard('https://i.imgur.com/9PvHBeM.png')">
-                <img src="https://i.imgur.com/9PvHBeM.png" alt="32x32 배너">
-            </div>
-        </div>
-        
-        <h2>동맹 링크 주소</h2>
-        <p style="font-size: 0.85em; color: #555;">
-            아래 상자를 클릭하면 동맹 주소가 복사됩니다.
-        </p>
-        <div class="banner-link-box" id="allianceLink" onclick="copyLinkToClipboard()">
-            https://osunia.github.io/bannermoa/
-        </div>
-
-        <hr> 
-
-        <div class="footer">
-            <p>©2025 bannermoa. All rights reserved.</p>
-        </div>
-
-    </div>
-
-    <div id="copyAlert" class="copy-alert">
-        주소가 복사되었습니다!
-    </div>
-
-    <script>
-        // ⬇️ [수정 3] 기존 window.onload를 통합하여 두 가지 기능을 모두 실행
-        window.onload = function() {
-            // 1. 페이지 콘텐츠를 서서히 나타나게 함 (이전 로딩 효과)
-            document.querySelector('.container').classList.add('loaded');
-            
-            // 2. 파티클 애니메이션을 시작함 (새로 추가된 기능)
-            initializeSparkles(); 
-        };
-
-        function copyToClipboard(text) {
-            const tempInput = document.createElement('textarea');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            showAlert();
-        }
-
-        function copyLinkToClipboard() {
-            const linkText = document.getElementById('allianceLink').innerText.trim();
-            copyToClipboard(linkText);
-        }
-
-        function showAlert() {
-            const alertBox = document.getElementById('copyAlert');
-            alertBox.style.opacity = '1';
-            setTimeout(() => {
-                alertBox.style.opacity = '0';
-            }, 1500);
-        }
-    </script>
-</body>
-</html>
