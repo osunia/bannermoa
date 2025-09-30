@@ -14,17 +14,35 @@
             font-family: 'Gowun Dodum', Arial, sans-serif;
             text-align: center;
             margin: 30px;
-            background-color: #f4f4f9;
+            background-image: url('https://i.imgur.com/He4toTS.jpeg');
+            background-size: cover; 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center center;
+            
+            background-color: #f4f4f9; 
             color: #333;
             font-size: 0.95em;
         }
+
+        /* ⬇️ [핵심 수정 1] .container를 처음에는 완전히 숨김 (opacity: 0) */
         .container {
             max-width: 700px;
             margin: 0 auto;
             padding: 25px;
-            background-color: #fff;
+            background-color: #fff; 
             border-radius: 8px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            
+            /* 초기 상태: 숨김 */
+            opacity: 0; 
+            /* 서서히 나타나는 애니메이션 효과를 위한 설정 */
+            transition: opacity 1s ease-in-out; 
+        }
+
+        /* ⬇️ [핵심 수정 2] 로딩 완료 시점에 .loaded 클래스를 추가하여 보이게 함 */
+        .container.loaded {
+            opacity: 1;
         }
         
         .header-area {
@@ -225,6 +243,12 @@
     </div>
 
     <script>
+        // ⬇️ [핵심 수정 3] 페이지 로드 완료 시점에 .container에 .loaded 클래스를 추가하는 스크립트
+        window.onload = function() {
+            // <body> 안의 모든 콘텐츠(이미지 포함) 로드가 완료되었을 때 실행됩니다.
+            document.querySelector('.container').classList.add('loaded');
+        };
+
         function copyToClipboard(text) {
             const tempInput = document.createElement('textarea');
             tempInput.value = text;
