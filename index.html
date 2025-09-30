@@ -26,7 +26,7 @@ var tinyx=new Array();
 var tinyy=new Array();
 var tinyv=new Array();
 var last_scroll_time = 0; // 스크롤 파티클 생성 간격 조절용 변수
-var is_active = false; // ⬇️ [추가] 파티클 생성을 제어할 플래그
+var is_active = false; // 파티클 생성을 제어할 플래그
 
 // ⬇️ [핵심 수정] 사용자 정의 색상 배열 정의
 var customColours = [
@@ -73,14 +73,19 @@ function initializeSparkles() {
         sparkle();
     }
 }
-// ⬇️ [유지] 이벤트 핸들러 설정 로직 분리 및 통합
+
+// ⬇️ [핵심 수정] 이벤트 핸들러 설정 로직 (스크롤 이벤트 추가)
 (function setupEvents() {
     if (isMobile()) {
+        // 모바일 환경: 터치 및 스크롤 이벤트에 반응
         document.addEventListener('touchmove', touchMove, { passive: true });
         document.addEventListener('touchstart', touchMove, { passive: true }); 
+        
+        // ⬇️ 스크롤 이벤트는 모바일에서만 별도로 연결
         window.addEventListener('scroll', scrollMove, { passive: true });
         
     } else {
+        // PC 환경: 마우스 움직임 이벤트에 반응
         document.onmousemove=mouse;
     }
 })();
@@ -88,7 +93,7 @@ function initializeSparkles() {
 function sparkle() {
     var c;
     
-    // ⬇️ [핵심 수정] is_active가 true일 때만 파티클 생성 로직을 실행
+    // is_active가 true일 때만 파티클 생성 로직을 실행
     if (is_active && (Math.abs(x-ox)>1 || Math.abs(y-oy)>1)) {
         ox=x;
         oy=y;
@@ -161,7 +166,7 @@ function update_tiny(i) {
     else tiny[i].style.visibility="hidden";
 }
 
-// ⬇️ [수정] PC용 마우스 이벤트 핸들러
+// ⬇️ [유지] PC용 마우스 이벤트 핸들러
 function mouse(e) {
     if (e) {
         y=e.pageY;
@@ -172,35 +177,32 @@ function mouse(e) {
         y=event.y+sdown;
         x=event.x+sleft;
     }
-    // 마우스가 움직일 때 파티클 생성을 요청합니다.
     is_active = true; 
 }
 
-// ⬇️ [수정] 모바일용 터치 이벤트 핸들러
+// ⬇️ [유지] 모바일용 터치 이벤트 핸들러
 function touchMove(e) {
     if (e.touches.length > 0) {
         y = e.touches[0].pageY;
         x = e.touches[0].pageX;
-        // 터치가 발생했을 때 파티클 생성을 요청합니다.
+        // 터치 시, 터치 좌표를 업데이트하고 파티클 생성을 요청
         is_active = true; 
     }
 }
 
-// ⬇️ [수정] 모바일/PC 스크롤 이벤트 핸들러
+// ⬇️ [유지] 모바일/PC 스크롤 이벤트 핸들러 (스크롤 감지만 담당)
 function scrollMove() {
     var now = Date.now();
-    // 너무 자주 생성되는 것을 방지하기 위해 100ms 간격으로 제한
     if (now - last_scroll_time < 100) return; 
     
     last_scroll_time = now;
     set_scroll(); 
 
-    // 현재 뷰포트 중앙에 파티클 생성 위치 설정
+    // ⬇️ [핵심 수정] 스크롤 시 파티클 위치를 화면 중앙으로 설정
     x = sleft + swide / 2;
     y = sdown + shigh / 2;
     
-    // 스크롤 시 파티클 생성을 요청합니다.
-    // 스크롤은 강제 생성이 필요하므로 ox, oy를 현재 x, y와 다르게 설정합니다.
+    // 강제 생성을 요청
     ox = -1; 
     oy = -1;
     is_active = true;
