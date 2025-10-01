@@ -25,17 +25,17 @@ var stary=new Array();
 var tinyx=new Array();
 var tinyy=new Array();
 var tinyv=new Array();
-var last_scroll_time = 0; // 스크롤 파티클 생성 간격 조절용 변수
-var is_active = false; // 파티클 생성을 제어할 플래그
+var last_scroll_time = 0; 
+var is_active = false; 
 
 // ⬇️ [유지] 사용자 정의 색상 배열 정의
 var customColours = [
-    "#A52A2A", // 갈색 (Brown)
-    "#D2B48C", // 연갈색 (Tan)
-    "#F5DEB3", // 연노랑 (Wheat)
-    "#B8860B", // 진한 황금색
-    "#DEB887", // 부드러운 나무색
-    "#FFD700"  // 황금색 (밝은 노란색 계열)
+    "#A52A2A", 
+    "#D2B48C", 
+    "#F5DEB3", 
+    "#B8860B", 
+    "#DEB887", 
+    "#FFD700" 
 ];
 
 // ⬇️ [유지] 모바일 환경 감지 함수
@@ -74,26 +74,22 @@ function initializeSparkles() {
     }
 }
 
-// ⬇️ [유지] 이벤트 핸들러 설정 로직: PC일 때만 마우스 이벤트를 연결합니다.
+// ⬇️ [유지] 이벤트 핸들러 설정 로직
 (function setupEvents() {
     if (!isMobile()) {
-        // PC 환경: 마우스 움직임 이벤트에 반응
         document.onmousemove=mouse;
-        
-        // PC 환경에서는 스크롤도 마우스로 처리
         window.addEventListener('scroll', scrollMove, { passive: true });
-        window.addEventListener('resize', set_width); // 리사이즈 이벤트 추가
+        window.addEventListener('resize', set_width); 
     }
 })();
 
 function sparkle() {
     var c;
     
-    // is_active가 true일 때만 파티클 생성 로직을 실행
     if (is_active && (Math.abs(x-ox)>1 || Math.abs(y-oy)>1)) {
         ox=x;
         oy=y;
-        is_active = false; // 파티클 생성 요청 처리 후 플래그 초기화
+        is_active = false; 
         
         for (c=0; c<sparkles; c++) if (!starv[c]) {
             star[c].style.left=(starx[c]=x)+"px";
@@ -119,8 +115,8 @@ function update_star(i) {
     if (starv[i]) {
         stary[i]+=1+Math.random()*3;
         starx[i]+=(i%5-2)/5;
-        // ⭐️ 수정: shigh+sdown 대신 shigh만 사용 (shigh가 이제 문서 전체 높이)
-        if (stary[i]<shigh) {
+        // ⭐️ 수정: shigh에서 10px 여백을 뺌
+        if (stary[i]<shigh - 10) { 
             star[i].style.top=stary[i]+"px";
             star[i].style.left=starx[i]+"px";
         }
@@ -150,8 +146,8 @@ function update_tiny(i) {
     if (tinyv[i]) {
         tinyy[i]+=1+Math.random()*3;
         tinyx[i]+=(i%5-2)/5;
-        // ⭐️ 수정: shigh+sdown 대신 shigh만 사용 (shigh가 이제 문서 전체 높이)
-        if (tinyy[i]<shigh) {
+        // ⭐️ 수정: shigh에서 10px 여백을 뺌
+        if (tinyy[i]<shigh - 10) {
             tiny[i].style.top=tinyy[i]+"px";
             tiny[i].style.left=tinyx[i]+"px";
         }
@@ -178,7 +174,7 @@ function mouse(e) {
     is_active = true; 
 }
 
-// ⬇️ [유지] 모바일/PC 스크롤 이벤트 핸들러 (PC에서만 연결됨)
+// ⬇️ [유지] 모바일/PC 스크롤 이벤트 핸들러 
 function scrollMove() {
     var now = Date.now();
     if (now - last_scroll_time < 100) return; 
@@ -186,17 +182,15 @@ function scrollMove() {
     last_scroll_time = now;
     set_scroll(); 
 
-    // 스크롤 시 파티클 위치를 화면 중앙으로 설정
     x = sleft + swide / 2;
     y = sdown + shigh / 2;
     
-    // 강제 생성을 요청
     ox = -1; 
     oy = -1;
     is_active = true;
 }
 
-window.onscroll=set_scroll; // 기존 스크롤 위치 업데이트 유지
+window.onscroll=set_scroll; 
 
 function set_scroll() {
     if (typeof(self.pageYOffset)=='number') {
@@ -246,7 +240,7 @@ function set_width() {
     
     swide=sw_min; // 너비는 뷰포트로 유지
     
-    // 2. ⭐️ 중요 수정: shigh를 문서 전체 높이로 설정 ⭐️
+    // 2. ⭐️ 중요: shigh를 문서 전체 높이로 설정 ⭐️
     var doc_height = Math.max(
         document.body.scrollHeight, 
         document.documentElement.scrollHeight, 
@@ -255,7 +249,6 @@ function set_width() {
         sh_min // 최소한 뷰포트 높이
     );
     
-    // 전체 문서 높이 또는 최소한 현재 뷰포트 높이를 shigh로 사용
     shigh = doc_height;
 }
 
