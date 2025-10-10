@@ -585,7 +585,15 @@
     <div id="copyAlert" class="copy-alert">
         주소가 복사되었습니다!
     </div>
-
+<div id="google_translate_element" style="display: none;"></div> 
+    
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ko'}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    </div>
     <script>
         // ⬇️ [유지] 페이지 로드 완료 시점에 .container에 .loaded 클래스를 추가하는 스크립트
         window.onload = function() {
@@ -623,5 +631,6 @@
     </script>
 </body>
 </html>
+
 
 
