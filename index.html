@@ -278,250 +278,267 @@
     // ]]>
     </script>
     
-    <style>
-        /* CSS 스타일 시작 */
-        body {
-            font-family: 'Gowun Dodum', Arial, sans-serif;
-            text-align: center; 
-            margin: 30px;
-            background-image: url('https://i.imgur.com/He4toTS.jpeg');
-            background-size: cover; 
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center center;
-            
-            background-color: #f4f4f9; 
-            color: #333;
-            font-size: 0.95em;
-        }
-
-        /* ⬇️ [유지] .container 너비를 480px로 조정 */
-        .container {
-            max-width: 480px;  /* 핵심 콘텐츠 박스 너비 */
-            margin: 0 auto;
-            padding: 25px;
-            background-color: #fff; 
-            border-radius: 8px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            
-            /* 초기 상태: 숨김 */
-            opacity: 0; 
-            /* 서서히 나타나는 애니메이션 효과를 위한 설정 */
-            transition: opacity 1s ease-in-out; 
-        }
-
-        /* ⬇️ [유지] 로딩 완료 시점에 .loaded 클래스를 추가하여 보이게 함 */
-        .container.loaded {
-            opacity: 1;
-        }
+<style>
+    /* CSS 스타일 시작 */
+    body {
+        font-family: 'Gowun Dodum', Arial, sans-serif;
+        text-align: center;
+        margin: 30px;
+        background-image: url('https://i.imgur.com/He4toTS.jpeg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center center;
         
-        .header-area {
-            background-image: url('https://i.imgur.com/4iyJbxE.png'); 
-            background-size: cover;
-            background-position: center;
-            padding: 20px 0;
-            /* 컨테이너 크기에 맞게 마진 조정 */
-            margin: -25px -25px 30px -25px; 
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
+        background-color: #f4f4f9;
+        color: #333;
+        font-size: 0.95em;
+    }
 
-        .main-title {
-            color: #645d55;
-            font-size: 2.2em;
-            margin-bottom: 0;
-            text-shadow: 
-                -1px -1px 0 #fff, 
-                1px -1px 0 #fff,
-                -1px 1px 0 #fff,
-                1px 1px 0 #fff;
-        }
-
-        /* 이모지 전용 스타일: 크기 조정 */
-        .emoji {
-            font-size: 0.85em;
-        }
-
-        .sub-title {
-            color: #333;
-            font-size: 0.85em;
-            font-weight: normal;
-            margin: 5px auto 0 auto;
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: rgba(255, 255, 255, 0.7); 
-            border-radius: 4px;
-        }
-
-        /* ⬇️ [유지] '나는...' 문구의 간격은 유지하며 중앙 정렬 */
-        .intro-prefix {
-            font-size: 1.3em; 
-            font-weight: bold; 
-            color: #645d55; 
-            margin: 20px auto 5px auto; 
-            text-align: center;
-        }
-
-        .intro-list {
-            list-style: none;
-            padding: 0;
-            /* ⬇️ [유지] 목록의 상하 간격 줄임 */
-            margin: 10px auto 20px auto; 
-            /* ⬇️ [유지] 컨테이너 너비에 맞춰 목록 최대 너비 조정 */
-            max-width: 300px; 
-            font-size: 0.95em; 
-            line-height: 1.8; 
-            
-            /* ⬇️ [유지] 목록 텍스트를 중앙 정렬! */
-            text-align: center; 
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 0; 
-        }
+    /* ⬇️ [유지] .container 너비를 480px로 조정 */
+    .container {
+        max-width: 480px;  /* 핵심 콘텐츠 박스 너비 */
+        margin: 0 auto;
+        padding: 25px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         
-        .intro-list li {
-            color: #444;
-            /* ⬇️ [유지] 인라인 블록으로 만들어 중앙 정렬 */
-            display: inline-block; 
-            position: relative; 
-            /* ⬇️ [유지] 항목 간 간격 설정 */
-            margin: 0 10px; 
-            padding-left: 0; 
-        }
+        /* 초기 상태: 숨김 */
+        opacity: 0;
+        /* 서서히 나타나는 애니메이션 효과를 위한 설정 */
+        transition: opacity 1s ease-in-out;
+    }
 
-        /* ⬇️ [유지] 체크박스 아이콘 스타일 */
-        .intro-list li::before {
-            content: "\2611"; /* &#9745;의 CSS용 유니코드 이스케이프 (\2611) */
-            position: relative; 
-            left: -5px; 
-            top: 0;
-            font-size: 1.1em;
-        }
-        
-        p.description {
-            font-size: 0.85em; 
-            /* ⬇️ [유지] 설명 문구 아래 여백 줄임 */
-            margin: 0 auto 15px auto; 
-            /* ⬇️ [유지] max-width 제거 상태 유지 */
-            color: #555;
-            text-align: center; 
-            word-break: keep-all;
-        }
-        
-        /* 💡 [추가] 방명록 링크 스타일 */
-        .guestbook-link {
-            color: #C0392B; /* 눈에 띄는 빨간색 계열 */
-            font-weight: bold;
-            text-decoration: underline;
-            /* hover 효과를 추가하여 클릭 가능한 요소임을 명확히 합니다. */
-            transition: color 0.2s;
-        }
+    /* ⬇️ [유지] 로딩 완료 시점에 .loaded 클래스를 추가하여 보이게 함 */
+    .container.loaded {
+        opacity: 1;
+    }
+    
+    .header-area {
+        background-image: url('https://i.imgur.com/4iyJbxE.png');
+        background-size: cover;
+        background-position: center;
+        padding: 20px 0;
+        /* 컨테이너 크기에 맞게 마진 조정 */
+        margin: -25px -25px 30px -25px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
 
-        .guestbook-link:hover {
-            color: #E74C3C; /* hover 시 약간 밝게 */
-            text-decoration: none;
-        }
+    .main-title {
+        color: #645d55;
+        font-size: 2.2em;
+        margin-bottom: 0;
+        text-shadow:
+            -1px -1px 0 #fff,
+            1px -1px 0 #fff,
+            -1px 1px 0 #fff,
+            1px 1px 0 #fff;
+    }
 
-        .banner-section {
-            margin-bottom: 5px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .banner-item {
-            margin: 10px 10px; 
-            display: block;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        /* 32x32px 기본 배너 이미지 스타일 */
-        .banner-item img {
-            width: 32px;
-            height: 32px;
-            border: 1px solid #ccc;
-            display: block;
-        }
-        
-        /* 200x40px 배너를 위한 전용 클래스 */
-        .banner-200x40 img {
-            width: 200px;
-            height: 40px;
-        }
+    /* 이모지 전용 스타일: 크기 조정 */
+    .emoji {
+        font-size: 0.85em;
+    }
 
-        .banner-item:hover {
-            transform: scale(1.05);
-        }
-        
-        p.banner-copy-note {
-            font-size: 0.85em; 
-            color: #777; 
-            /* ⬇️ [유지] 배너 설명 아래 여백 늘림 */
-            margin: 5px auto 25px auto; 
-            text-align: center; 
-        }
+    .sub-title {
+        color: #333;
+        font-size: 0.85em;
+        font-weight: normal;
+        margin: 5px auto 0 auto;
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 4px;
+    }
 
-        .banner-link-box {
-            display: inline-block;
-            background-color: #eee;
-            /* ⚠️ [유지] 좌우 여백 24px 추가 */
-            padding: 8px 24px; 
-            border: 1px dashed #ccc;
-            margin: 10px auto 5px auto; 
-            font-size: 0.85em;
-            word-break: break-all;
-            cursor: copy;
-            text-align: center; 
-        }
-        
-        h2 {
-            text-align: center; 
-        }
-        
-        .footer {
-            /* ⚠️ [유지] 푸터 상단 여백 줄임 */
-            margin-top: 25px; 
-            font-size: 0.8em;
-            color: #777;
-            text-align: center; 
-        }
+    /* ⬇️ [유지] '나는...' 문구의 간격은 유지하며 중앙 정렬 */
+    .intro-prefix {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #645d55;
+        margin: 20px auto 5px auto;
+        text-align: center;
+    }
 
-        /* ⬇️ [유지] 관리자 텍스트 링크 스타일 */
-        .footer a {
-            color: #777;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
+    .intro-list {
+        list-style: none;
+        padding: 0;
+        /* ⬇️ [유지] 목록의 상하 간격 줄임 */
+        margin: 10px auto 20px auto;
+        /* ⬇️ [유지] 컨테이너 너비에 맞춰 목록 최대 너비 조정 */
+        max-width: 300px;
+        font-size: 0.95em;
+        line-height: 1.8;
         
-        hr {
-            border: 0;
-            border-top: 1px solid #ddd;
-            width: 50%;
-            /* ⚠️ [유지] 구분선 상하 여백 늘림 */
-            margin: 25px auto; 
-        }
+        /* ⬇️ [유지] 목록 텍스트를 중앙 정렬! */
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0;
+    }
+    
+    .intro-list li {
+        color: #444;
+        /* ⬇️ [유지] 인라인 블록으로 만들어 중앙 정렬 */
+        display: inline-block;
+        position: relative;
+        /* ⬇️ [유지] 항목 간 간격 설정 */
+        margin: 0 10px;
+        padding-left: 0;
+    }
 
-        .copy-alert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        /* CSS 스타일 끝 */
-    </style>
+    /* ⬇️ [유지] 체크박스 아이콘 스타일 */
+    .intro-list li::before {
+        content: "\2611"; /* &#9745;의 CSS용 유니코드 이스케이프 (\2611) */
+        position: relative;
+        left: -5px;
+        top: 0;
+        font-size: 1.1em;
+    }
+    
+    p.description {
+        font-size: 0.85em;
+        /* ⬇️ [유지] 설명 문구 아래 여백 줄임 */
+        margin: 0 auto 15px auto;
+        /* ⬇️ [유지] max-width 제거 상태 유지 */
+        color: #555;
+        text-align: center;
+        word-break: keep-all;
+    }
+    
+    /* 💡 [유지] 방명록 링크 스타일 */
+    .guestbook-link {
+        color: #C0392B; /* 눈에 띄는 빨간색 계열 */
+        font-weight: bold;
+        text-decoration: underline;
+        /* hover 효과를 추가하여 클릭 가능한 요소임을 명확히 합니다. */
+        transition: color 0.2s;
+    }
+
+    .guestbook-link:hover {
+        color: #E74C3C; /* hover 시 약간 밝게 */
+        text-decoration: none;
+    }
+
+    /* 🌟 [변경] 배너 섹션을 세로로 정렬하도록 수정 */
+    .banner-section {
+        margin-bottom: 5px;
+        /* 세로 정렬을 위해 'flex'와 'column' 사용 🧱 */
+        display: flex;
+        flex-direction: column; /* 세로(열)로 쌓기 */
+        align-items: center;    /* 가운데 정렬 */
+        /* flex-wrap: wrap; 는 세로 정렬 시 필요 없으므로 삭제 */
+    }
+    
+    /* 🌟 [변경] 배너 아이템의 기본 간격을 조정 (기존 가로 마진 10px을 0으로 초기화) */
+    .banner-item {
+        /* 상하좌우 마진을 모두 0으로 초기화하고 필요한 마진은 아래 개별 클래스에서 설정 */
+        margin: 0; 
+        display: block;
+        cursor: pointer;
+        transition: transform 0.2s;
+        padding: 5px 0; /* 클릭 영역 확보 및 기본 수직 간격 초기화에 도움 */
+    }
+
+    /* 🌟 [추가] 200x40 배너들 사이의 좁은 간격 (5px) */
+    .banner-200x40, .banner-200x40-2 {
+        /* 같은 사이즈 배너끼리는 좁게 (5px) */
+        margin-bottom: 5px; 
+    }
+
+    /* 🌟 [추가] 두 번째 200x40 배너와 다음 32x32 배너 사이의 넓은 간격 (25px) */
+    .banner-200x40-2 {
+        /* 다음 배너(32x32)와의 간격은 넓게 (25px) */
+        margin-bottom: 25px !important; /* 우선 순위 높게 설정 */
+    }
+    
+    /* 32x32px 기본 배너 이미지 스타일 */
+    .banner-item img {
+        width: 32px;
+        height: 32px;
+        border: 1px solid #ccc;
+        display: block;
+    }
+    
+    /* 200x40px 배너를 위한 전용 클래스 */
+    .banner-200x40 img, .banner-200x40-2 img { /* banner-200x40-2에도 적용 */
+        width: 200px;
+        height: 40px;
+    }
+
+    .banner-item:hover {
+        transform: scale(1.05);
+    }
+    
+    p.banner-copy-note {
+        font-size: 0.85em;
+        color: #777;
+        /* ⬇️ [유지] 배너 설명 아래 여백 늘림 */
+        margin: 5px auto 25px auto;
+        text-align: center;
+    }
+
+    .banner-link-box {
+        display: inline-block;
+        background-color: #eee;
+        /* ⚠️ [유지] 좌우 여백 24px 추가 */
+        padding: 8px 24px;
+        border: 1px dashed #ccc;
+        margin: 10px auto 5px auto;
+        font-size: 0.85em;
+        word-break: break-all;
+        cursor: copy;
+        text-align: center;
+    }
+    
+    h2 {
+        text-align: center;
+    }
+    
+    .footer {
+        /* ⚠️ [유지] 푸터 상단 여백 줄임 */
+        margin-top: 25px;
+        font-size: 0.8em;
+        color: #777;
+        text-align: center;
+    }
+
+    /* ⬇️ [유지] 관리자 텍스트 링크 스타일 */
+    .footer a {
+        color: #777;
+        text-decoration: none;
+    }
+
+    .footer a:hover {
+        text-decoration: underline;
+    }
+    
+    hr {
+        border: 0;
+        border-top: 1px solid #ddd;
+        width: 50%;
+        /* ⚠️ [유지] 구분선 상하 여백 늘림 */
+        margin: 25px auto;
+    }
+
+    .copy-alert {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+    }
+    /* CSS 스타일 끝 */
+</style>
 </head>
 <body>
 
@@ -635,6 +652,7 @@
     </script>
 </body>
 </html>
+
 
 
 
