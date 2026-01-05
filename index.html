@@ -55,33 +55,48 @@
     }
 
     // ⬇️ [유지] 파티클 초기화 함수
-    function initializeSparkles() { 
-        if (document.getElementById) {
-            var i, rats, rlef, rdow;
-            for (var i=0; i<sparkles; i++) {
-                var rats=createDiv(3, 3);
-                rats.style.visibility="hidden";
-                rats.style.zIndex="999";
-                document.body.appendChild(tiny[i]=rats);
-                starv[i]=0;
-                tinyv[i]=0;
-                var rats=createDiv(5, 5);
-                rats.style.backgroundColor="transparent";
-                rats.style.visibility="hidden";
-                rats.style.zIndex="999";
-                var rlef=createDiv(1, 5);
-                var rdow=createDiv(5, 1);
-                rats.appendChild(rlef);
-                rats.appendChild(rdow);
-                rlef.style.top="2px";
-                rlef.style.left="0px";
-                rdow.style.top="0px";
-                rdow.style.left="2px";
-                document.body.appendChild(star[i]=rats);
-            }
-            set_width();
-            sparkle();
-        }
+    function initializeSparkles() { 
+        if (document.getElementById) {
+            
+            // ⭐️ [핵심] body를 기준점으로 설정 (방명록과 동일)
+            document.body.style.position = "relative";
+
+            // 투명 상자 생성 (overflow: hidden으로 넘치는 파티클 잘라냄)
+            var pContainer = document.createElement("div");
+            pContainer.id = "particle-container";
+            pContainer.style.cssText = "position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; pointer-events:none; z-index:999;";
+            document.body.appendChild(pContainer);
+
+            var i, rats, rlef, rdow;
+            for (var i=0; i<sparkles; i++) {
+                var rats=createDiv(3, 3);
+                rats.style.visibility="hidden";
+                rats.style.zIndex="999";
+                
+                // ⭐️ 상자에 넣기
+                pContainer.appendChild(tiny[i]=rats);
+                
+                starv[i]=0;
+                tinyv[i]=0;
+                var rats=createDiv(5, 5);
+                rats.style.backgroundColor="transparent";
+                rats.style.visibility="hidden";
+                rats.style.zIndex="999";
+                var rlef=createDiv(1, 5);
+                var rdow=createDiv(5, 1);
+                rats.appendChild(rlef);
+                rats.appendChild(rdow);
+                rlef.style.top="2px";
+                rlef.style.left="0px";
+                rdow.style.top="0px";
+                rdow.style.left="2px";
+                
+                // ⭐️ 상자에 넣기
+                pContainer.appendChild(star[i]=rats);
+            }
+            set_width();
+            sparkle();
+        }
     }
 
     // ⬇️ [유지] 이벤트 핸들러 설정 로직
@@ -227,39 +242,39 @@
     window.onresize=set_width;
 
     function set_width() {
-        var sw_min=999999;
-        var sh_min=999999;
-        
-        // 1. 뷰포트 너비/높이 계산 (sw_min, sh_min은 뷰포트 크기)
-        if (document.documentElement && document.documentElement.clientWidth) {
-            if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
-            if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
-        }
-        if (typeof(self.innerWidth)=='number' && self.innerWidth) {
-            if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
-            if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
-        }
-        if (document.body.clientWidth) {
-            if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
-            if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
-        }
-        if (sw_min==999999 || sh_min==999999) {
-            sw_min=800;
-            sh_min=600;
-        }
-        
-        swide=sw_min; // 너비는 뷰포트로 유지
-        
-        // 2. ⭐️ 중요: shigh를 문서 전체 높이로 설정 ⭐️
-        var doc_height = Math.max(
-            document.body.scrollHeight, 
-            document.documentElement.scrollHeight, 
-            document.body.offsetHeight, 
-            document.documentElement.offsetHeight,
-            sh_min // 최소한 뷰포트 높이
-        );
-        
-        shigh = doc_height;
+        var sw_min=999999;
+        var sh_min=999999;
+        
+        // 1. 화면 크기 계산 (기존 유지)
+        if (document.documentElement && document.documentElement.clientWidth) {
+            if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
+            if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
+        }
+        if (typeof(self.innerWidth)=='number' && self.innerWidth) {
+            if (self.innerWidth>0 && self.innerWidth<sw_min) sw_min=self.innerWidth;
+            if (self.innerHeight>0 && self.innerHeight<sh_min) sh_min=self.innerHeight;
+        }
+        if (document.body.clientWidth) {
+            if (document.body.clientWidth>0 && document.body.clientWidth<sw_min) sw_min=document.body.clientWidth;
+            if (document.body.clientHeight>0 && document.body.clientHeight<sh_min) sh_min=document.body.clientHeight;
+        }
+        if (sw_min==999999 || sh_min==999999) {
+            sw_min=800;
+            sh_min=600;
+        }
+        
+        swide=sw_min; 
+        
+        // ⭐️ [핵심] 페이지 높이를 건드리는 코드를 삭제하고, 푸터 위치만 확인합니다.
+        var footer = document.querySelector('.footer');
+        if (footer) {
+            // 푸터의 끝부분 계산
+            var footerBottom = footer.getBoundingClientRect().bottom + window.scrollY;
+            shigh = footerBottom; 
+        } else {
+            // 푸터가 없으면 화면 높이 사용
+            shigh = sh_min;
+        }
     }
 
     function createDiv(height, width) {
@@ -284,6 +299,7 @@
         font-family: 'Gowun Dodum', Arial, sans-serif;
         text-align: center;
         margin: 30px;
+        padding-bottom: 30px;
         background-image: url('https://i.imgur.com/He4toTS.jpeg');
         background-size: cover;
         background-repeat: no-repeat;
@@ -652,6 +668,7 @@
     </script>
 </body>
 </html>
+
 
 
 
