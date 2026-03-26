@@ -13,13 +13,13 @@
     
     <script type="text/javascript">
     // <![CDATA[
-    var colour="custom"; 
+    var colour="custom"; 
     var sparkles=50;
 
     /****************************
     * Tinkerbell Magic Sparkle *
     *(c)2005-13 mf2fm web-design*
-    * http://www.mf2fm.com/rv  *
+    * http://www.mf2fm.com/rv  *
     * DON'T EDIT BELOW THIS BOX *
     ****************************/
     var x=ox=400;
@@ -35,33 +35,28 @@
     var tinyx=new Array();
     var tinyy=new Array();
     var tinyv=new Array();
-    var last_scroll_time = 0; 
-    var is_active = false; 
+    var last_scroll_time = 0; 
+    var is_active = false; 
 
-    // ⬇️ [유지] 사용자 정의 색상 배열 정의
     var customColours = [
-        "#A52A2A", 
-        "#D2B48C", 
-        "#F5DEB3", 
-        "#B8860B", 
-        "#DEB887", 
-        "#FFD700" 
+        "#A52A2A", 
+        "#D2B48C", 
+        "#F5DEB3", 
+        "#B8860B", 
+        "#DEB887", 
+        "#FFD700" 
     ];
 
-    // ⬇️ [유지] 모바일 환경 감지 함수
     function isMobile() {
-        var userAgent = navigator.userAgent.toLowerCase();
-        return /android|iphone|ipad|ipod|blackberry|windows phone/g.test(userAgent);
+        var userAgent = navigator.userAgent.toLowerCase();
+        return /android|iphone|ipad|ipod|blackberry|windows phone/g.test(userAgent);
     }
 
-    // ⬇️ [유지] 파티클 초기화 함수
     function initializeSparkles() { 
         if (document.getElementById) {
             
-            // ⭐️ [핵심] body를 기준점으로 설정 (방명록과 동일)
             document.body.style.position = "relative";
 
-            // 투명 상자 생성 (overflow: hidden으로 넘치는 파티클 잘라냄)
             var pContainer = document.createElement("div");
             pContainer.id = "particle-container";
             pContainer.style.cssText = "position:absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; pointer-events:none; z-index:999;";
@@ -73,7 +68,6 @@
                 rats.style.visibility="hidden";
                 rats.style.zIndex="999";
                 
-                // ⭐️ 상자에 넣기
                 pContainer.appendChild(tiny[i]=rats);
                 
                 starv[i]=0;
@@ -91,7 +85,6 @@
                 rdow.style.top="0px";
                 rdow.style.left="2px";
                 
-                // ⭐️ 상자에 넣기
                 pContainer.appendChild(star[i]=rats);
             }
             set_width();
@@ -99,153 +92,145 @@
         }
     }
 
-    // ⬇️ [유지] 이벤트 핸들러 설정 로직
     (function setupEvents() {
-        if (!isMobile()) {
-            document.onmousemove=mouse;
-            window.addEventListener('scroll', scrollMove, { passive: true });
-            window.addEventListener('resize', set_width); 
-        }
+        if (!isMobile()) {
+            document.onmousemove=mouse;
+            window.addEventListener('scroll', scrollMove, { passive: true });
+            window.addEventListener('resize', set_width); 
+        }
     })();
 
     function sparkle() {
-        var c;
-        
-        if (is_active && (Math.abs(x-ox)>1 || Math.abs(y-oy)>1)) {
-            ox=x;
-            oy=y;
-            is_active = false; 
-            
-            for (c=0; c<sparkles; c++) if (!starv[c]) {
-                star[c].style.left=(starx[c]=x)+"px";
-                star[c].style.top=(stary[c]=y+1)+"px";
-                star[c].style.clip="rect(0px, 5px, 5px, 0px)";
-                var selectedColour = (colour == "custom" || colour == "random") ? newColour() : colour;
-                star[c].childNodes[0].style.backgroundColor = star[c].childNodes[1].style.backgroundColor = selectedColour;
-                star[c].style.visibility="visible";
-                starv[c]=50;
-                break;
-            }
-        }
-        
-        for (c=0; c<sparkles; c++) {
-            if (starv[c]) update_star(c);
-            if (tinyv[c]) update_tiny(c);
-        }
-        setTimeout("sparkle()", 40);
+        var c;
+        
+        if (is_active && (Math.abs(x-ox)>1 || Math.abs(y-oy)>1)) {
+            ox=x;
+            oy=y;
+            is_active = false; 
+            
+            for (c=0; c<sparkles; c++) if (!starv[c]) {
+                star[c].style.left=(starx[c]=x)+"px";
+                star[c].style.top=(stary[c]=y+1)+"px";
+                star[c].style.clip="rect(0px, 5px, 5px, 0px)";
+                var selectedColour = (colour == "custom" || colour == "random") ? newColour() : colour;
+                star[c].childNodes[0].style.backgroundColor = star[c].childNodes[1].style.backgroundColor = selectedColour;
+                star[c].style.visibility="visible";
+                starv[c]=50;
+                break;
+            }
+        }
+        
+        for (c=0; c<sparkles; c++) {
+            if (starv[c]) update_star(c);
+            if (tinyv[c]) update_tiny(c);
+        }
+        setTimeout("sparkle()", 40);
     }
 
     function update_star(i) {
-        if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
-        if (starv[i]) {
-            stary[i]+=1+Math.random()*3;
-            starx[i]+=(i%5-2)/5;
-            // ⭐️ 수정: shigh에서 10px 여백을 뺌
-            if (stary[i]<shigh - 10) { 
-                star[i].style.top=stary[i]+"px";
-                star[i].style.left=starx[i]+"px";
-            }
-            else {
-                star[i].style.visibility="hidden";
-                starv[i]=0;
-                return;
-            }
-        }
-        else {
-            tinyv[i]=50;
-            tiny[i].style.top=(tinyy[i]=stary[i])+"px";
-            tiny[i].style.left=(tinyx[i]=starx[i])+"px";
-            tiny[i].style.width="2px";
-            tiny[i].style.height="2px";
-            tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
-            star[i].style.visibility="hidden";
-            tiny[i].style.visibility="visible"
-        }
+        if (--starv[i]==25) star[i].style.clip="rect(1px, 4px, 4px, 1px)";
+        if (starv[i]) {
+            stary[i]+=1+Math.random()*3;
+            starx[i]+=(i%5-2)/5;
+            if (stary[i]<shigh - 10) { 
+                star[i].style.top=stary[i]+"px";
+                star[i].style.left=starx[i]+"px";
+            }
+            else {
+                star[i].style.visibility="hidden";
+                starv[i]=0;
+                return;
+            }
+        }
+        else {
+            tinyv[i]=50;
+            tiny[i].style.top=(tinyy[i]=stary[i])+"px";
+            tiny[i].style.left=(tinyx[i]=starx[i])+"px";
+            tiny[i].style.width="2px";
+            tiny[i].style.height="2px";
+            tiny[i].style.backgroundColor=star[i].childNodes[0].style.backgroundColor;
+            star[i].style.visibility="hidden";
+            tiny[i].style.visibility="visible"
+        }
     }
 
     function update_tiny(i) {
-        if (--tinyv[i]==25) {
-            tiny[i].style.width="1px";
-            tiny[i].style.height="1px";
-        }
-        if (tinyv[i]) {
-            tinyy[i]+=1+Math.random()*3;
-            tinyx[i]+=(i%5-2)/5;
-            // ⭐️ 수정: shigh에서 10px 여백을 뺌
-            if (tinyy[i]<shigh - 10) {
-                tiny[i].style.top=tinyy[i]+"px";
-                tiny[i].style.left=tinyx[i]+"px";
-            }
-            else {
-                tiny[i].style.visibility="hidden";
-                tinyv[i]=0;
-                return;
-            }
-        }
-        else tiny[i].style.visibility="hidden";
+        if (--tinyv[i]==25) {
+            tiny[i].style.width="1px";
+            tiny[i].style.height="1px";
+        }
+        if (tinyv[i]) {
+            tinyy[i]+=1+Math.random()*3;
+            tinyx[i]+=(i%5-2)/5;
+            if (tinyy[i]<shigh - 10) {
+                tiny[i].style.top=tinyy[i]+"px";
+                tiny[i].style.left=tinyx[i]+"px";
+            }
+            else {
+                tiny[i].style.visibility="hidden";
+                tinyv[i]=0;
+                return;
+            }
+        }
+        else tiny[i].style.visibility="hidden";
     }
 
-    // ⬇️ [유지] PC용 마우스 이벤트 핸들러
     function mouse(e) {
-        if (e) {
-            y=e.pageY;
-            x=e.pageX;
-        }
-        else {
-            set_scroll();
-            y=event.y+sdown;
-            x=event.x+sleft;
-        }
-        is_active = true; 
+        if (e) {
+            y=e.pageY;
+            x=e.pageX;
+        }
+        else {
+            set_scroll();
+            y=event.y+sdown;
+            x=event.x+sleft;
+        }
+        is_active = true; 
     }
 
-    // ⬇️ [유지] 모바일/PC 스크롤 이벤트 핸들러 
     function scrollMove() {
-        var now = Date.now();
-        if (now - last_scroll_time < 100) return; 
-        
-        last_scroll_time = now;
-        set_scroll(); 
+        var now = Date.now();
+        if (now - last_scroll_time < 100) return; 
+        
+        last_scroll_time = now;
+        set_scroll(); 
 
-        x = sleft + swide / 2;
-        y = sdown + shigh / 2;
-        
-        ox = -1; 
-        oy = -1;
-        is_active = true;
+        x = sleft + swide / 2;
+        y = sdown + shigh / 2;
+        
+        ox = -1; 
+        oy = -1;
+        is_active = true;
     }
 
-    window.onscroll=set_scroll; 
+    window.onscroll=set_scroll; 
 
     function set_scroll() {
-        if (typeof(self.pageYOffset)=='number') {
-            sdown=self.pageYOffset;
-            sleft=self.pageXOffset;
-        }
-        else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
-            sdown=document.body.scrollTop;
-            sleft=document.body.scrollLeft;
-        }
-        else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
-            sleft=document.documentElement.scrollLeft;
-            sdown=document.documentElement.scrollTop;
-        }
-        else {
-            sdown=0;
-            sleft=0;
-        }
-        // 스크롤 시에도 너비/높이 갱신
-        set_width(); 
+        if (typeof(self.pageYOffset)=='number') {
+            sdown=self.pageYOffset;
+            sleft=self.pageXOffset;
+        }
+        else if (document.body && (document.body.scrollTop || document.body.scrollLeft)) {
+            sdown=document.body.scrollTop;
+            sleft=document.body.scrollLeft;
+        }
+        else if (document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)) {
+            sleft=document.documentElement.scrollLeft;
+            sdown=document.documentElement.scrollTop;
+        }
+        else {
+            sdown=0;
+            sleft=0;
+        }
+        set_width(); 
     }
 
-    // ⭐️ set_width() 함수 유지 ⭐️
     window.onresize=set_width;
 
     function set_width() {
         var sw_min=999999;
         var sh_min=999999;
         
-        // 1. 화면 크기 계산 (기존 유지)
         if (document.documentElement && document.documentElement.clientWidth) {
             if (document.documentElement.clientWidth>0) sw_min=document.documentElement.clientWidth;
             if (document.documentElement.clientHeight>0) sh_min=document.documentElement.clientHeight;
@@ -265,36 +250,32 @@
         
         swide=sw_min; 
         
-        // ⭐️ [핵심] 페이지 높이를 건드리는 코드를 삭제하고, 푸터 위치만 확인합니다.
         var footer = document.querySelector('.footer');
         if (footer) {
-            // 푸터의 끝부분 계산
             var footerBottom = footer.getBoundingClientRect().bottom + window.scrollY;
             shigh = footerBottom; 
         } else {
-            // 푸터가 없으면 화면 높이 사용
             shigh = sh_min;
         }
     }
 
     function createDiv(height, width) {
-        var div=document.createElement("div");
-        div.style.position="absolute";
-        div.style.height=height+"px";
-        div.style.width=width+"px";
-        div.style.overflow="hidden";
-        return (div);
+        var div=document.createElement("div");
+        div.style.position="absolute";
+        div.style.height=height+"px";
+        div.style.width=width+"px";
+        div.style.overflow="hidden";
+        return (div);
     }
 
     function newColour() {
-        var index = Math.floor(Math.random() * customColours.length);
-        return customColours[index];
+        var index = Math.floor(Math.random() * customColours.length);
+        return customColours[index];
     }
     // ]]>
     </script>
     
 <style>
-    /* CSS 스타일 시작 */
     body {
         font-family: 'Gowun Dodum', Arial, sans-serif;
         text-align: center;
@@ -309,24 +290,26 @@
         background-color: #f4f4f9;
         color: #333;
         font-size: 0.95em;
+
+        /* 💡 1. 텍스트 및 이미지 드래그 선택 방지 CSS 추가 */
+        -webkit-user-select: none; /* Safari, Chrome */
+        -moz-user-select: none;    /* Firefox */
+        -ms-user-select: none;     /* IE 10+ */
+        user-select: none;         /* Standard syntax */
     }
 
-    /* ⬇️ [유지] .container 너비를 480px로 조정 */
     .container {
-        max-width: 480px;  /* 핵심 콘텐츠 박스 너비 */
+        max-width: 480px;
         margin: 0 auto;
         padding: 25px;
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        
-        /* 초기 상태: 숨김 */
+
         opacity: 0;
-        /* 서서히 나타나는 애니메이션 효과를 위한 설정 */
         transition: opacity 1s ease-in-out;
     }
 
-    /* ⬇️ [유지] 로딩 완료 시점에 .loaded 클래스를 추가하여 보이게 함 */
     .container.loaded {
         opacity: 1;
     }
@@ -336,7 +319,6 @@
         background-size: cover;
         background-position: center;
         padding: 20px 0;
-        /* 컨테이너 크기에 맞게 마진 조정 */
         margin: -25px -25px 30px -25px;
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
@@ -354,7 +336,6 @@
             1px 1px 0 #fff;
     }
 
-    /* 이모지 전용 스타일: 크기 조정 */
     .emoji {
         font-size: 0.85em;
     }
@@ -370,7 +351,6 @@
         border-radius: 4px;
     }
 
-    /* ⬇️ [유지] '나는...' 문구의 간격은 유지하며 중앙 정렬 */
     .intro-prefix {
         font-size: 1.3em;
         font-weight: bold;
@@ -382,14 +362,10 @@
     .intro-list {
         list-style: none;
         padding: 0;
-        /* ⬇️ [유지] 목록의 상하 간격 줄임 */
         margin: 10px auto 20px auto;
-        /* ⬇️ [유지] 컨테이너 너비에 맞춰 목록 최대 너비 조정 */
         max-width: 300px;
         font-size: 0.95em;
         line-height: 1.8;
-        
-        /* ⬇️ [유지] 목록 텍스트를 중앙 정렬! */
         text-align: center;
         margin-left: auto;
         margin-right: auto;
@@ -398,17 +374,14 @@
     
     .intro-list li {
         color: #444;
-        /* ⬇️ [유지] 인라인 블록으로 만들어 중앙 정렬 */
         display: inline-block;
         position: relative;
-        /* ⬇️ [유지] 항목 간 간격 설정 */
         margin: 0 10px;
         padding-left: 0;
     }
 
-    /* ⬇️ [유지] 체크박스 아이콘 스타일 */
     .intro-list li::before {
-        content: "\2611"; /* &#9745;의 CSS용 유니코드 이스케이프 (\2611) */
+        content: "\2611"; 
         position: relative;
         left: -5px;
         top: 0;
@@ -417,61 +390,47 @@
     
     p.description {
         font-size: 0.85em;
-        /* ⬇️ [유지] 설명 문구 아래 여백 줄임 */
         margin: 0 auto 15px auto;
-        /* ⬇️ [유지] max-width 제거 상태 유지 */
         color: #555;
         text-align: center;
         word-break: keep-all;
     }
     
-    /* 💡 [유지] 방명록 링크 스타일 */
     .guestbook-link {
-        color: #C0392B; /* 눈에 띄는 빨간색 계열 */
+        color: #C0392B; 
         font-weight: bold;
         text-decoration: underline;
-        /* hover 효과를 추가하여 클릭 가능한 요소임을 명확히 합니다. */
         transition: color 0.2s;
     }
 
     .guestbook-link:hover {
-        color: #E74C3C; /* hover 시 약간 밝게 */
+        color: #E74C3C;
         text-decoration: none;
     }
 
-    /* 🌟 [변경] 배너 섹션을 세로로 정렬하도록 수정 */
     .banner-section {
         margin-bottom: 5px;
-        /* 세로 정렬을 위해 'flex'와 'column' 사용 🧱 */
         display: flex;
-        flex-direction: column; /* 세로(열)로 쌓기 */
-        align-items: center;    /* 가운데 정렬 */
-        /* flex-wrap: wrap; 는 세로 정렬 시 필요 없으므로 삭제 */
+        flex-direction: column;
+        align-items: center; 
     }
     
-    /* 🌟 [변경] 배너 아이템의 기본 간격을 조정 (기존 가로 마진 10px을 0으로 초기화) */
     .banner-item {
-        /* 상하좌우 마진을 모두 0으로 초기화하고 필요한 마진은 아래 개별 클래스에서 설정 */
         margin: 0; 
         display: block;
         cursor: pointer;
         transition: transform 0.2s;
-        padding: 5px 0; /* 클릭 영역 확보 및 기본 수직 간격 초기화에 도움 */
+        padding: 5px 0;
     }
 
-    /* 🌟 [추가] 200x40 배너들 사이의 좁은 간격 (5px) */
     .banner-200x40, .banner-200x40-2 {
-        /* 같은 사이즈 배너끼리는 좁게 (5px) */
         margin-bottom: 5px; 
     }
 
-    /* 🌟 [추가] 두 번째 200x40 배너와 다음 32x32 배너 사이의 넓은 간격 (25px) */
     .banner-200x40-2 {
-        /* 다음 배너(32x32)와의 간격은 넓게 (25px) */
-        margin-bottom: 25px !important; /* 우선 순위 높게 설정 */
+        margin-bottom: 25px !important;
     }
     
-    /* 32x32px 기본 배너 이미지 스타일 */
     .banner-item img {
         width: 32px;
         height: 32px;
@@ -479,8 +438,7 @@
         display: block;
     }
     
-    /* 200x40px 배너를 위한 전용 클래스 */
-    .banner-200x40 img, .banner-200x40-2 img { /* banner-200x40-2에도 적용 */
+    .banner-200x40 img, .banner-200x40-2 img { 
         width: 200px;
         height: 40px;
     }
@@ -492,7 +450,6 @@
     p.banner-copy-note {
         font-size: 0.85em;
         color: #777;
-        /* ⬇️ [유지] 배너 설명 아래 여백 늘림 */
         margin: 5px auto 25px auto;
         text-align: center;
     }
@@ -500,7 +457,6 @@
     .banner-link-box {
         display: inline-block;
         background-color: #eee;
-        /* ⚠️ [유지] 좌우 여백 24px 추가 */
         padding: 8px 24px;
         border: 1px dashed #ccc;
         margin: 10px auto 5px auto;
@@ -515,14 +471,12 @@
     }
     
     .footer {
-        /* ⚠️ [유지] 푸터 상단 여백 줄임 */
         margin-top: 25px;
         font-size: 0.8em;
         color: #777;
         text-align: center;
     }
-
-    /* ⬇️ [유지] 관리자 텍스트 링크 스타일 */
+    
     .footer a {
         color: #777;
         text-decoration: none;
@@ -536,7 +490,6 @@
         border: 0;
         border-top: 1px solid #ddd;
         width: 50%;
-        /* ⚠️ [유지] 구분선 상하 여백 늘림 */
         margin: 25px auto;
     }
 
@@ -553,10 +506,10 @@
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
     }
-    /* CSS 스타일 끝 */
 </style>
 </head>
-<body>
+
+<body oncontextmenu="return false" ondragstart="return false" onselectstart="return false">
 
     <div class="container">
 
@@ -634,14 +587,11 @@
         }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    </div>
+    
     <script>
-        // ⬇️ [유지] 페이지 로드 완료 시점에 .container에 .loaded 클래스를 추가하는 스크립트
         window.onload = function() {
-            // <body> 안의 모든 콘텐츠(이미지 포함) 로드가 완료되었을 때 실행됩니다.
             document.querySelector('.container').classList.add('loaded');
             
-            // 2. PC (데스크톱) 환경일 때만 파티클 애니메이션을 시작함
             if (!isMobile()) {
                 initializeSparkles();  
             }
@@ -669,16 +619,23 @@
                 alertBox.style.opacity = '0';
             }, 1500);
         }
+
+        document.addEventListener('keydown', function(event) {
+            // F12 (123)
+            // Ctrl + Shift + I (73)
+            // Ctrl + Shift + J (74)
+            // Ctrl + U (85)
+            // Ctrl + S (83)
+            if (event.keyCode === 123 || 
+               (event.ctrlKey && event.shiftKey && event.keyCode === 73) || 
+               (event.ctrlKey && event.shiftKey && event.keyCode === 74) || 
+               (event.ctrlKey && event.keyCode === 85) || 
+               (event.ctrlKey && event.keyCode === 83)) {
+                
+                event.preventDefault(); 
+                return false;
+            }
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
